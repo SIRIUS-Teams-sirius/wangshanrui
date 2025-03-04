@@ -31,17 +31,17 @@ import RightBottom from "./right-bottom.vue";
       </ItemWrap>
     </div>
     <div class="contetn_right">
-      <ItemWrap class="contetn_left-bottom contetn_lr-item" title="报警次数">
+      <!-- <ItemWrap class="contetn_left-bottom contetn_lr-item" title="报警次数">
         <RightTop />
-      </ItemWrap>
+      </ItemWrap> -->
       <ItemWrap
-        class="contetn_left-bottom contetn_lr-item"
-        title="报警排名(TOP8)"
+        class="contetn_left-bottom right"
+        title="城市排名(TOP8)"
         style="padding: 0 10px 16px 10px"
       >
         <RightCenter />
       </ItemWrap>
-      <ItemWrap class="contetn_left-bottom contetn_lr-item" title="数据统计图 ">
+      <ItemWrap class="contetn_left-bottom right" title="威胁等级分布 ">
         <RightBottom />
       </ItemWrap>
     </div>
@@ -81,8 +81,11 @@ import RightBottom from "./right-bottom.vue";
   height: 310px;
 }
 .left {
-  height:480px;
-  width:540px;
+  height: 480px;
+  width: 540px;
 }
-
+.right {
+  height: 480px;
+  width: 540px;
+}
 </style>
