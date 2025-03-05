@@ -1,12 +1,12 @@
 .navbar {
-    width: 100vw; /* 使用视口宽度单位，确保和页面同宽 */
+    width: 100vw;
     position: fixed;
     top: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0.5vh 1vw;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgb(0, 0, 0);
     z-index: 10;
     box-sizing: border-box;
     flex-wrap: wrap;
@@ -23,12 +23,12 @@
   .nav-item {
     color: white;
     cursor: pointer;
-    padding: 0.5vh 0.7vw; /* 减小内边距 */
-    border-radius: 0.15vh; /* 减小圆角半径 */
+    padding: 0.5vh 0.7vw;
+    border-radius: 0.15vh;
     transition: all 0.3s ease;
     white-space: nowrap;
-    margin-right: 1vw; /* 减小间距 */
-    font-size: 2.5vh; /* 减小字体大小 */
+    margin-right: 1vw;
+    font-size: 2.5vh;
     flex: 0 0 auto;
   }
   
@@ -46,13 +46,13 @@
   
   .login-btn,
   .register-btn {
-    padding: 0.5vh 0.7vw; /* 减小内边距 */
+    padding: 0.5vh 0.7vw;
     border: none;
-    border-radius: 0.3vh; /* 减小圆角半径 */
+    border-radius: 0.3vh;
     cursor: pointer;
     transition: 0.3s;
-    margin-left: 1vw; /* 减小间距 */
-    font-size: 2.5vh; /* 减小字体大小 */
+    margin-left: 1vw;
+    font-size: 2.5vh;
     flex: 0 0 auto;
   }
   
@@ -92,42 +92,36 @@
   position: absolute;
   top: 100%;
   left: 0;
-  right: 0; /* 新增，通过left和right精确控制水平位置 */
-  box-sizing: border-box; 
+  right: 0;
+  width: 100%;
   background: rgba(0, 0, 0, 0.8);
   z-index: 10;
   border-radius: 0.15vh;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  padding: 0;
+  padding: 0.5vh 0;
   margin: 0;
-  width: auto; /* 让宽度自适应内容，但结合left和right控制位置 */
-  min-width: 100%; /* 确保至少和父元素一样宽 */
+  box-sizing: border-box;
 }
 
 .dropdown-item {
-  box-sizing: border-box; /* 重置box-sizing */
   color: white;
   cursor: pointer;
-  padding: 0.2vh 0.3vw; 
+  padding: 0.5vh 0.7vw;
   border-radius: 0.15vh;
   transition: all 0.3s ease;
   white-space: nowrap;
-  margin: 0; 
   font-size: 2.5vh;
   display: block;
-  text-indent: 0; 
-  text-align: left; 
-  width: 100%; 
+  text-align: left;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0.3vh 0;
 }
 
 .dropdown-item:hover {
   background-color: #007bff;
-  width: 100%; 
 }
 
-/* 复用导航栏大屏幕下的样式调整 */
-@media (min-width: 75em) {
- .dropdown-content {
-      padding: 1vh 6vw;
-  }
+.dropdown:hover .dropdown-content {
+  display: block;
 }
