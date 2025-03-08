@@ -7,6 +7,8 @@ import VChart from 'vue-echarts'
 import '@/assets/css/main.scss'
 import '@/assets/css/tailwind.css'
 import '@/assets/css/navbar.css'
+import ElementPlus from 'element-plus';
+import 'element-plus/dist/index.css';
 
 import {registerEcharts} from "@/plugins/echarts"
 //不使用mock 请注释掉
@@ -18,5 +20,6 @@ app.component('v-chart', VChart)
 registerEcharts(app)
 app.use(createPinia())
 app.use(router)
+app.use(ElementPlus);
 
 app.mount('#app')
