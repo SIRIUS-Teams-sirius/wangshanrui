@@ -102,7 +102,11 @@ const hideDropdown = (dropdownId: string) => {
   }
 };
 
-// 定义表单数据
+import { StorageEnum } from "@/enums";
+import { ElMessage } from 'element-plus';
+import { POST } from '@/api/api';
+
+// 表单数据
 const username = ref('');
 const password = ref('');
 const confirmPassword = ref('');
@@ -112,15 +116,41 @@ const role = ref('');
 const contact = ref('');
 
 // 处理表单提交
-const onSubmit = () => {
-  console.log('Username:', username.value);
-  console.log('Password:', password.value);
-  console.log('Confirm Password:', confirmPassword.value);
-  console.log('Address:', address.value);
-  console.log('Type:', type.value);
-  console.log('Role:', role.value);
-  console.log('Contact:', contact.value);
-  // 这里可以添加实际的注册逻辑
+const onSubmit = async () => {
+  try {
+    // 前端基础验证
+    if (password.value !== confirmPassword.value) {
+      ElMessage.error('两次输入的密码不一致');
+      return;
+    }
+
+    // 调用注册接口
+    const res = await POST('/user/register', {
+      username: username.value,
+      password: password.value,
+      address: address.value,
+      type: type.value,
+      role: role.value,
+      contact: contact.value
+    });
+
+    // 处理响应
+    if (res.code === 200) {
+      ElMessage.success('注册成功');
+      router.push('/login'); 
+    } else {
+      ElMessage.error(res.message || '注册失败');
+    }
+  } catch (error: any) {
+    // 错误处理
+    if (error.response?.data?.code === 400) {
+      ElMessage.error(error.response.data.message || '请求参数错误');
+    } else if (error.code === 401) {
+      ElMessage.error('认证失败');
+    } else {
+      ElMessage.error('网络请求失败，请检查连接');
+    }
+  }
 };
 </script>
 
