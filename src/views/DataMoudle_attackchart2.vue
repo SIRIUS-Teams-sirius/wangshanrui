@@ -55,6 +55,7 @@ const getOption = (): EChartsOption => ({
     radius: ['41%', '76%'],
     center: ['35%', '52%'],
     top: '15%',
+    
     data: props.attackData.seriesData,
     label: {
         show: false,
