@@ -1,39 +1,42 @@
 <template>
-    <!-- 顶部导航栏 -->
-    <nav class="navbar">
-      <div class="nav-left">
-        <span class="nav-item active" @click="goToHomePage">首页</span>
-        <span class="nav-item dropdown" @mouseenter="showDropdown('dataDropdown')" @mouseleave="hideDropdown('dataDropdown')">
-          数据模块
-          <div class="dropdown-content" id="dataDropdown">
-            <span class="dropdown-item" @click="goToAttackChart">攻击类型</span>
-            <span class="dropdown-item" @click="goToConnectionType">连接类型</span>
-            <span class="dropdown-item" @click="goToProtocolType">协议类型</span>
-            <span class="dropdown-item" @click="goToServiceType">服务类型</span>
-          </div>
-        </span>
-        <span class="nav-item">联邦学习模块</span>
-        <span class="nav-item" @click="goToDatascreenhome">检测模块</span>
-      </div>
-      <div class="nav-right">
-        <button class="login-btn" @click="goToLogin">登录</button>
-        <button class="register-btn" @click="goToRegister">注册</button>
-      </div>
-    </nav>
+  <!-- 顶部导航栏 -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <span class="nav-item active" @click="goToHomePage">首页</span>
+      <span class="nav-item dropdown" @mouseenter="showDropdown('dataDropdown')" @mouseleave="hideDropdown('dataDropdown')">
+        数据模块
+        <div class="dropdown-content" id="dataDropdown">
+          <span class="dropdown-item" @click="goToAttackChart">攻击类型</span>
+          <span class="dropdown-item" @click="goToConnectionType">连接类型</span>
+          <span class="dropdown-item" @click="goToProtocolType">协议类型</span>
+          <span class="dropdown-item" @click="goToServiceType">服务类型</span>
+        </div>
+      </span>
+      <span class="nav-item">联邦学习模块</span>
+      <span class="nav-item" @click="goToDatascreenhome">检测模块</span>
+    </div>
+    <div class="nav-right">
+      <button class="login-btn" @click="goToLogin">登录</button>
+      <button class="register-btn" @click="goToRegister">注册</button>
+    </div>
+  </nav>
 
-  <div class="w3l-signinform">
-    <!-- container -->
-    <div class="wrapper">
-      <!-- main content -->
-      <div class="w3l-form-info">
-        <div class="w3_info">
+<div class="w3l-signinform">
+  <!-- container -->
+  <div class="wrapper">
+    <!-- main content -->
+    <div class="w3l-form-info">
+      <div class="w3_info">
+        <div class="left-info">
           <h1>Welcome Back</h1>
           <p class="sub-para">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-          <h2>Log In</h2>
+        </div>
+        <div class="right-form">
+          <button type="submit">Log In</button>
           <form @submit.prevent="onSubmit">
             <div class="input-group">
               <span><i class="fa fa-user" aria-hidden="true"></i></span>
-              <input v-model="username" type="username" placeholder="username" required>
+              <input v-model="username" type="text" placeholder="username" required>
             </div>
             <div class="input-group two-groop">
               <span><i class="fa fa-key" aria-hidden="true"></i></span>
@@ -52,9 +55,10 @@
           <p class="account">Don't have an account? <a href="#register">Register</a></p>
         </div>
       </div>
-      <!-- //main content -->
     </div>
+    <!-- //main content -->
   </div>
+</div>
 </template>
 
 <script setup lang="ts">
@@ -97,10 +101,15 @@ const rememberMe = ref(false);
 
 // 登录提交逻辑
 const onSubmit = async () => {
+  console.log('[Debug] 开始提交表单');//debug
   try {
     // 调用你的登录接口
+    console.log('[Debug] 请求参数:', {//debug
+  username: username.value,
+  password: password.value
+});
     const res = await POST('/user/login', {
-      username: username.value,
+      username: username.value,  // 假设后端接收 username 字段
       password: password.value
     });
 
@@ -114,7 +123,7 @@ const onSubmit = async () => {
       
       // 3. 可选：记住我功能
       if (rememberMe.value) {
-        localStorage.setItem('rememberedMe', username.value);
+        localStorage.setItem('rememberedEmail', username.value);
       }
     } else {
       // 显示后端返回的错误信息
@@ -205,7 +214,15 @@ a {
   text-decoration: none;
 }
 
-h1,h2,h3,h4,h5,h6,p,ul,ol {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+ol {
   margin: 0;
   padding: 0;
 }
@@ -233,10 +250,11 @@ img {
 .w3l-form-info {
   padding-top: 2em;
 }
+
 .w3l-signinform {
   padding: 40px 40px;
   min-height: 100vh;
-  background: url(../images/1.jpg) no-repeat center;
+  background: url(@/assets/img/Login_RegisterBackground.jpg) no-repeat center;
   background-size: cover;
   -webkit-background-size: cover;
   -o-background-size: cover;
@@ -246,6 +264,7 @@ img {
   z-index: 1;
   align-items: center;
 }
+
 .w3l-signinform::before {
   background-color: rgb(76 2 27 / 65%);
   content: "";
@@ -256,8 +275,8 @@ img {
   right: 0;
   z-index: -1;
 }
+
 input[type="text"],
-input[type="username"],
 input[type="password"] {
   font-size: 17px;
   font-weight: 500;
@@ -286,6 +305,7 @@ input[type="password"] {
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0;
 }
+
 .input-group.two-groop {
   border-top: none;
   margin-bottom: 30px;
@@ -297,6 +317,7 @@ input[type="password"] {
   border-top-left-radius: 0px;
   border-top-right-radius: 0;
 }
+
 .btn-block {
   display: block;
   width: 50%;
@@ -381,6 +402,7 @@ input[type="password"] {
   color: #444;
   text-transform: capitalize;
 }
+
 h1 {
   font-size: 36px;
   font-weight: 600;
@@ -388,27 +410,32 @@ h1 {
   margin-bottom: 0.4em;
   line-height: 40px;
 }
+
 .w3_info {
   padding: 1em 1em;
   background: transparent;
-  max-width: 400px;
-  display: grid;
-  margin-left: auto;
+  max-width: 800px;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
 }
 
-.left_grid_info {
-  padding: 6em 0;
+.left-info {
+  font-size:20px;
+  flex-basis: 80%;
+  padding-right: 20px;
+  padding-top: 20px;
 }
-.w3l_form {
-  padding: 0px;
-  flex-basis: 50%;
-  -webkit-flex-basis: 50%;
-  background: #dad1f8;
+
+.right-form {
+  flex-basis: 60%;
 }
+
 .w3_info p {
   padding-bottom: 30px;
   text-align: center;
 }
+
 .w3_info p.sub-para {
   padding-bottom: 40px;
   text-align: left;
@@ -416,6 +443,7 @@ h1 {
   opacity: 0.9;
   line-height: 28px;
 }
+
 p.account,
 p.account a {
   text-align: center;
@@ -479,9 +507,11 @@ h5 {
   font-weight: 600;
   color: #000;
 }
+
 .footer {
   padding-top: 3em;
 }
+
 .footer p {
   text-align: center;
   font-size: 17px;
@@ -575,7 +605,12 @@ p.continue span:after {
 
 @media screen and (max-width: 767px) {
   .w3_info {
-    margin-right: auto;
+    flex-direction: column;
+  }
+  .left-info,
+  .right-form {
+    flex-basis: 100%;
+    padding-right: 0;
   }
 }
 
@@ -659,7 +694,6 @@ p.continue span:after {
   }
 
   input[type="text"],
-  input[type="username"],
   input[type="password"] {
     font-size: 13px;
   }
@@ -674,6 +708,5 @@ p.continue span:after {
 }
 
 /** /Responsive **/
-
 /*-- //form styling --*/
 </style>

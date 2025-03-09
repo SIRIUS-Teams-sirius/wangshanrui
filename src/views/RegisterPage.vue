@@ -268,7 +268,7 @@ img {
 .w3l-signinform {
   padding: 40px 40px;
   min-height: 100vh;
-  background: url(../images/1.jpg) no-repeat center;
+  background: url(@/assets/img/Login_RegisterBackground.jpg) no-repeat center;
   background-size: cover;
   -webkit-background-size: cover;
   -o-background-size: cover;
@@ -314,12 +314,12 @@ input[type="password"] {
   -moz-border-radius: 6px;
   -ms-border-radius: 6px;
   -o-border-radius: 6px;
-  border-bottom-left-radius: 0px;
-  border-bottom-right-radius: 0;
+  /* border-bottom-left-radius: 0px; */
+  /* border-bottom-right-radius: 0; */
 }
 .input-group.two-groop {
   border-top: none;
-  margin-bottom: 30px;
+  margin-bottom: 0px;
   border-radius: 6px;
   -webkit-border-radius: 6px;
   -moz-border-radius: 6px;
