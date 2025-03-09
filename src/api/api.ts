@@ -97,6 +97,7 @@ export const GET = async (url: string, params: Params): Promise<any> => {
  * @return {any} 
  */
 export const POST = async (url: string, params: Params): Promise<any> => {
+<<<<<<< HEAD
     try {
         params = isEncryptionParam(params)
         const data = await axios.post(`${baseUrl}${url}`, params,
@@ -106,6 +107,22 @@ export const POST = async (url: string, params: Params): Promise<any> => {
         return error;
     }
 }
+=======
+    console.log('POST function called'); // 确认 POST 函数被调用
+    try {
+      const data = await axios.post(`${baseUrl}${url}`, params, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      console.log('Response Data:', data); // 打印响应数据
+      return data;
+    } catch (error) {
+      console.error('Request Error:', error); // 打印错误信息
+      return error;
+    }
+  };
+>>>>>>> 8c3411a62192c21a04900b153cbe81c03fcab870
 /**
  * @description: 没有基地址 访问根目录下文件
  * @param {string} url

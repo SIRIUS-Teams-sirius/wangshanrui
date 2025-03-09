@@ -228,4 +228,8 @@ onMounted(()=>{
   />
 </template>
 
+<<<<<<< HEAD
 <style scoped lang="scss"></style>
+=======
+<style scoped lang="scss"></style>
+>>>>>>> 8c3411a62192c21a04900b153cbe81c03fcab870

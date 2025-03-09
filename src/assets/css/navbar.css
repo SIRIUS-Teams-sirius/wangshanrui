@@ -45,7 +45,13 @@
   }
   
   .login-btn,
+<<<<<<< HEAD
   .register-btn {
+=======
+  .register-btn,
+  .logout-btn
+ {
+>>>>>>> 8c3411a62192c21a04900b153cbe81c03fcab870
     padding: 0.5vh 0.7vw;
     border: none;
     border-radius: 0.3vh;
@@ -61,7 +67,12 @@
     color: white;
   }
   
+<<<<<<< HEAD
   .register-btn {
+=======
+  .register-btn,
+  .logout-btn {
+>>>>>>> 8c3411a62192c21a04900b153cbe81c03fcab870
     background: #007bff;
     color: white;
   }
@@ -71,7 +82,12 @@
     color: black;
   }
   
+<<<<<<< HEAD
   .register-btn:hover {
+=======
+  .register-btn:hover
+  .logout-btn {
+>>>>>>> 8c3411a62192c21a04900b153cbe81c03fcab870
     background: #0056b3;
   }
 

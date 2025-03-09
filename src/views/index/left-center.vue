@@ -64,9 +64,15 @@ const setOption = () => {
     },
     series: [
       {
+<<<<<<< HEAD
         name: "攻击占比",
         type: "pie",
         radius: ["30%", "60%"],
+=======
+        name: "用户总览",
+        type: "pie",
+        radius: ["40%", "70%"],
+>>>>>>> 8c3411a62192c21a04900b153cbe81c03fcab870
         // avoidLabelOverlap: false,
         itemStyle: {
           borderRadius: 6,
@@ -149,4 +155,8 @@ const setOption = () => {
   <v-chart class="chart" :option="option" />
 </template>
 
+<<<<<<< HEAD
 <style scoped lang="scss"></style>
+=======
+<style scoped lang="scss"></style>
+>>>>>>> 8c3411a62192c21a04900b153cbe81c03fcab870

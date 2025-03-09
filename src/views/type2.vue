@@ -28,7 +28,11 @@ export default {
         title: {
           text: 'Type of attack',
           left: 'center',
+<<<<<<< HEAD
           top: '10%',            // 顶部间距控制 
+=======
+          top: '6%',            // 顶部间距控制 
+>>>>>>> 8c3411a62192c21a04900b153cbe81c03fcab870
           textStyle: {          // 文本样式控制 
           fontSize: 18,
           fontWeight: 'bold'
@@ -47,7 +51,11 @@ export default {
           {
             type: 'pie',
             radius: '55%',
+<<<<<<< HEAD
             center: ['50%', '50%'],
+=======
+            center: ['40%', '50%'],
+>>>>>>> 8c3411a62192c21a04900b153cbe81c03fcab870
             selectedMode: 'single',
             data: [
               {

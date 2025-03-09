@@ -12,8 +12,13 @@ import 'element-plus/dist/index.css';
 
 import {registerEcharts} from "@/plugins/echarts"
 //不使用mock 请注释掉
+<<<<<<< HEAD
 // import { mockXHR } from "@/mock/index";
 // mockXHR()
+=======
+import { mockXHR } from "@/mock/index";
+mockXHR()
+>>>>>>> 8c3411a62192c21a04900b153cbe81c03fcab870
 
 const app = createApp(App)
 app.component('v-chart', VChart)
