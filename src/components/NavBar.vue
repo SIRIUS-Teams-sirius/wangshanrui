@@ -54,18 +54,6 @@ const hideDropdown = (dropdownId: string) => {
   }
 };
   
-<<<<<<< HEAD
-  const handleLogout = async () => {
-    try {
-      await POST('/user/logout', {});
-      userStore.logout();
-      router.push('/login');
-      ElMessage.success('已安全退出');
-    } catch (error) {
-      ElMessage.error('退出失败，请重试');
-    }
-  };
-=======
 const handleLogout = async () => {
   try {
     const response = await POST('/user/logout', {});
@@ -82,5 +70,4 @@ const handleLogout = async () => {
     ElMessage.error('退出失败，请重试');
   }
 };
->>>>>>> 8c3411a62192c21a04900b153cbe81c03fcab870
   </script>

@@ -17,26 +17,11 @@ import RightBottom from "./right-bottom.vue";
         <div class="item">实时监测</div>
         <div class="item">统计分析</div>
       </div> -->
-<<<<<<< HEAD
       <ItemWrap class="contetn_left-center left" title="攻击占比">
         <LeftCenter />
       </ItemWrap>
       <ItemWrap class="contetn_left-top left" title="上一周的入侵流量统计">
         <LeftTop />
-=======
-      <ItemWrap class="contetn_left-top contetn_lr-item" title="设备总览">
-        <LeftTop />
-      </ItemWrap>
-      <ItemWrap class="contetn_left-center contetn_lr-item" title="用户总览">
-        <LeftCenter />
-      </ItemWrap>
-      <ItemWrap
-        class="contetn_left-bottom contetn_lr-item"
-        title="设备提醒"
-        style="padding: 0 10px 16px 10px"
-      >
-        <LeftBottom />
->>>>>>> 8c3411a62192c21a04900b153cbe81c03fcab870
       </ItemWrap>
     </div>
     <div class="contetn_center">
@@ -46,30 +31,17 @@ import RightBottom from "./right-bottom.vue";
       </ItemWrap>
     </div>
     <div class="contetn_right">
-<<<<<<< HEAD
       <!-- <ItemWrap class="contetn_left-bottom contetn_lr-item" title="报警次数">
         <RightTop />
       </ItemWrap> -->
       <ItemWrap
         class="contetn_left-bottom right"
         title="城市排名(TOP8)"
-=======
-      <ItemWrap class="contetn_left-bottom contetn_lr-item" title="报警次数">
-        <RightTop />
-      </ItemWrap>
-      <ItemWrap
-        class="contetn_left-bottom contetn_lr-item"
-        title="报警排名(TOP8)"
->>>>>>> 8c3411a62192c21a04900b153cbe81c03fcab870
         style="padding: 0 10px 16px 10px"
       >
         <RightCenter />
       </ItemWrap>
-<<<<<<< HEAD
       <ItemWrap class="contetn_left-bottom right" title="威胁等级分布 ">
-=======
-      <ItemWrap class="contetn_left-bottom contetn_lr-item" title="数据统计图 ">
->>>>>>> 8c3411a62192c21a04900b153cbe81c03fcab870
         <RightBottom />
       </ItemWrap>
     </div>
@@ -108,7 +80,6 @@ import RightBottom from "./right-bottom.vue";
 .contetn_lr-item {
   height: 310px;
 }
-<<<<<<< HEAD
 .left {
   height: 480px;
   width: 540px;
@@ -117,6 +88,4 @@ import RightBottom from "./right-bottom.vue";
   height: 480px;
   width: 540px;
 }
-=======
->>>>>>> 8c3411a62192c21a04900b153cbe81c03fcab870
 </style>

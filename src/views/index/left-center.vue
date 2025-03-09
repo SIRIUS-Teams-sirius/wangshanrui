@@ -64,15 +64,9 @@ const setOption = () => {
     },
     series: [
       {
-<<<<<<< HEAD
         name: "攻击占比",
         type: "pie",
         radius: ["30%", "60%"],
-=======
-        name: "用户总览",
-        type: "pie",
-        radius: ["40%", "70%"],
->>>>>>> 8c3411a62192c21a04900b153cbe81c03fcab870
         // avoidLabelOverlap: false,
         itemStyle: {
           borderRadius: 6,
