@@ -10,7 +10,7 @@
           <p class="sub-para">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
         </div>
         <div class="right-form">
-          <button type="submit">Log In</button>
+          <h2>Log In</h2>
           <form @submit.prevent="onSubmit">
             <div class="input-group">
               <span><i class="fa fa-user" aria-hidden="true"></i></span>

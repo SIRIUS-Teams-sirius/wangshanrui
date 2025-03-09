@@ -45,7 +45,9 @@
   }
   
   .login-btn,
-  .register-btn {
+  .register-btn,
+  .logout-btn
+ {
     padding: 0.5vh 0.7vw;
     border: none;
     border-radius: 0.3vh;
@@ -61,7 +63,8 @@
     color: white;
   }
   
-  .register-btn {
+  .register-btn,
+  .logout-btn {
     background: #007bff;
     color: white;
   }
@@ -71,7 +74,8 @@
     color: black;
   }
   
-  .register-btn:hover {
+  .register-btn:hover
+  .logout-btn {
     background: #0056b3;
   }
 

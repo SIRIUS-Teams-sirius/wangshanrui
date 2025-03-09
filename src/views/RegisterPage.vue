@@ -26,7 +26,7 @@
               </div>
               <div class="input-group two-groop">
                 <span><i class="fa fa-map-marker" aria-hidden="true"></i></span>
-                <input v-model="address" type="text" placeholder="Address" required>
+                <input v-model="location" type="text" placeholder="location" required>
               </div>
               <div class="input-group two-groop">
                 <span><i class="fa fa-tags" aria-hidden="true"></i></span>
@@ -71,7 +71,7 @@ import { POST } from '@/api/api';
 const username = ref('');
 const password = ref('');
 const confirmPassword = ref('');
-const address = ref('');
+const location = ref('');
 const type = ref('');
 const role = ref('');
 const contact = ref('');
@@ -89,7 +89,7 @@ const onSubmit = async () => {
     const res = await POST('/user/register', {
       username: username.value,
       password: password.value,
-      address: address.value,
+      address: location.value,
       type: type.value,
       role: role.value,
       contact: contact.value

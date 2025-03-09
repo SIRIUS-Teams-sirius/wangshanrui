@@ -54,14 +54,20 @@ const hideDropdown = (dropdownId: string) => {
   }
 };
   
-  const handleLogout = async () => {
-    try {
-      await POST('/user/logout', {});
+const handleLogout = async () => {
+  try {
+    const response = await POST('/user/logout', {});
+    console.log('Logout Response:', response); // 打印响应
+    if (response.status === 200) { // 确保响应状态码为 200
       userStore.logout();
       router.push('/login');
       ElMessage.success('已安全退出');
-    } catch (error) {
+    } else {
       ElMessage.error('退出失败，请重试');
     }
-  };
+  } catch (error) {
+    console.error('Logout Error:', error); // 打印错误信息
+    ElMessage.error('退出失败，请重试');
+  }
+};
   </script>

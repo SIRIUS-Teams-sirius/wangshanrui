@@ -98,14 +98,20 @@ export const GET = async (url: string, params: Params): Promise<any> => {
  */
 export const POST = async (url: string, params: Params): Promise<any> => {
     try {
-        params = isEncryptionParam(params)
-        const data = await axios.post(`${baseUrl}${url}`, params,
-        );
-        return data;
+      params = isEncryptionParam(params);
+      console.log('Request Params:', params); // 打印请求参数
+      const data = await axios.post(`${baseUrl}${url}`, params, {
+        headers: {
+          'Content-Type': 'application/json', // 确保请求头正确
+        },
+      });
+      console.log('Response Data:', data); // 打印响应数据
+      return data;
     } catch (error) {
-        return error;
+      console.error('Request Error:', error); // 打印错误信息
+      return error;
     }
-}
+  };
 /**
  * @description: 没有基地址 访问根目录下文件
  * @param {string} url
