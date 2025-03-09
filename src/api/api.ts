@@ -97,12 +97,11 @@ export const GET = async (url: string, params: Params): Promise<any> => {
  * @return {any} 
  */
 export const POST = async (url: string, params: Params): Promise<any> => {
+    console.log('POST function called'); // 确认 POST 函数被调用
     try {
-      params = isEncryptionParam(params);
-      console.log('Request Params:', params); // 打印请求参数
       const data = await axios.post(`${baseUrl}${url}`, params, {
         headers: {
-          'Content-Type': 'application/json', // 确保请求头正确
+          'Content-Type': 'application/json',
         },
       });
       console.log('Response Data:', data); // 打印响应数据

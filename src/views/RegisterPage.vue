@@ -89,7 +89,7 @@ const onSubmit = async () => {
     const res = await POST('/user/register', {
       username: username.value,
       password: password.value,
-      address: location.value,
+      location: location.value,
       type: type.value,
       role: role.value,
       contact: contact.value
