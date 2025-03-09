@@ -6,7 +6,7 @@ interface UtilVarType {
 }
 
 const UtilVar:UtilVarType = {
-    baseUrl:"",
+    baseUrl:"/localhost:8081",
     code:401, //登陆过期
     noContentCode:204, //请求成功但没有内容
     ENC:false,

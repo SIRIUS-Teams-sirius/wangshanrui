@@ -31,7 +31,13 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
       port: 8112,
       open: false,
       strictPort: false,
-      // proxy: {}
+      proxy: {
+        '/api': {
+          target: 'http://localhost:8080',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, '')
+        }
+      }
     },
     resolve: {
       alias: {
