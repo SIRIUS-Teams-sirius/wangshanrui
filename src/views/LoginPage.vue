@@ -15,10 +15,17 @@
       <span class="nav-item">联邦学习模块</span>
       <span class="nav-item" @click="goToDatascreenhome">检测模块</span>
     </div>
-    <div class="nav-right">
-      <button class="login-btn" @click="goToLogin">登录</button>
-      <button class="register-btn" @click="goToRegister">注册</button>
-    </div>
+    <!-- 修改导航栏右侧部分 -->
+<div class="nav-right">
+  <!-- 登录/注册按钮（未登录状态显示） -->
+  <template v-if="!isLoggedIn">
+    <button class="login-btn" @click="goToLogin">登录</button>
+    <button class="register-btn" @click="goToRegister">注册</button>
+  </template>
+  
+  <!-- 退出按钮（登录状态显示） -->
+  <button v-else class="logout-btn" @click="handleLogout">退出</button>
+</div>
   </nav>
 
 <div class="w3l-signinform">
@@ -62,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessage, useGetDerivedNamespace } from 'element-plus';
 import { POST } from '@/api/api';
@@ -94,6 +101,37 @@ const hideDropdown = (dropdownId: string) => {
     dropdown.style.display = 'none';
   }
 };
+
+// 添加登录状态响应式变量
+const isLoggedIn = ref(false);
+
+// 初始化时检查登录状态
+onMounted(() => {
+  isLoggedIn.value = !!localStorage.getItem(StorageEnum.GB_TOKEN_STORE);
+});
+
+// 添加退出处理函数
+const handleLogout = async () => {
+  try {
+    // 1. 调用退出接口
+    await POST('/user/logout', {});
+    
+    // 2. 清除本地token
+    localStorage.removeItem(StorageEnum.GB_TOKEN_STORE);
+    
+    // 3. 更新登录状态
+    isLoggedIn.value = false;
+    
+    // 4. 跳转到登录页
+    router.push('/login');
+    
+    ElMessage.success('已安全退出');
+  } catch (error) {
+    console.error('退出失败:', error);
+    ElMessage.error('退出失败，请重试');
+  }
+};
+
 // 表单数据
 const username = ref('');
 const password = ref('');
@@ -104,7 +142,7 @@ const onSubmit = async () => {
   console.log('[Debug] 开始提交表单');//debug
   try {
     // 调用你的登录接口
-    console.log('[Debug] 请求参数:', {//debug
+    console.log('[Debug] 请求参数:', {
   username: username.value,
   password: password.value
 });
@@ -115,6 +153,7 @@ const onSubmit = async () => {
 
     // 登录成功处理
     if (res.code === 200) {
+      isLoggedIn.value = true;
       // 1. 存储 token
       localStorage.setItem(StorageEnum.GB_TOKEN_STORE, res.token);
       
@@ -706,7 +745,20 @@ p.continue span:after {
     font-size: 13px;
   }
 }
+/* 添加退出按钮样式 */
+.logout-btn {
+  background: #ff4d4f;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
 
+.logout-btn:hover {
+  background: #ff7875;
+}
 /** /Responsive **/
 /*-- //form styling --*/
 </style>
