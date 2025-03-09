@@ -1,33 +1,4 @@
 <template>
-  <!-- 顶部导航栏 -->
-  <nav class="navbar">
-    <div class="nav-left">
-      <span class="nav-item active" @click="goToHomePage">首页</span>
-      <span class="nav-item dropdown" @mouseenter="showDropdown('dataDropdown')" @mouseleave="hideDropdown('dataDropdown')">
-        数据模块
-        <div class="dropdown-content" id="dataDropdown">
-          <span class="dropdown-item" @click="goToAttackChart">攻击类型</span>
-          <span class="dropdown-item" @click="goToConnectionType">连接类型</span>
-          <span class="dropdown-item" @click="goToProtocolType">协议类型</span>
-          <span class="dropdown-item" @click="goToServiceType">服务类型</span>
-        </div>
-      </span>
-      <span class="nav-item">联邦学习模块</span>
-      <span class="nav-item" @click="goToDatascreenhome">检测模块</span>
-    </div>
-    <!-- 修改导航栏右侧部分 -->
-<div class="nav-right">
-  <!-- 登录/注册按钮（未登录状态显示） -->
-  <template v-if="!isLoggedIn">
-    <button class="login-btn" @click="goToLogin">登录</button>
-    <button class="register-btn" @click="goToRegister">注册</button>
-  </template>
-  
-  <!-- 退出按钮（登录状态显示） -->
-  <button v-else class="logout-btn" @click="handleLogout">退出</button>
-</div>
-  </nav>
-
 <div class="w3l-signinform">
   <!-- container -->
   <div class="wrapper">
@@ -76,32 +47,10 @@ import { POST } from '@/api/api';
 import { StorageEnum } from "@/enums";
 import { use } from 'echarts';
 import { userInfo } from 'os';
+import { useUserStore } from '@/stores/user';
+
+const userStore = useUserStore();
 const router = useRouter();
-
-// 导航相关函数（保持你的原有代码不变）
-const goToLogin = () => router.push('/login');
-const goToRegister = () => router.push('/register');
-const goToDatascreenhome = () => router.push('/index');
-const goToHomePage = () => router.push('/home');
-const goToAttackChart = () => router.push('/dm_attackchart');
-const goToConnectionType = () => router.push('/dm_connectiontype');
-const goToProtocolType = () => router.push('/dm_protocoltype');
-const goToServiceType = () => router.push('/dm_servicetype');
-
-const showDropdown = (dropdownId: string) => {
-  const dropdown = document.getElementById(dropdownId);
-  if (dropdown) {
-    dropdown.style.display = 'block';
-  }
-};
-
-const hideDropdown = (dropdownId: string) => {
-  const dropdown = document.getElementById(dropdownId);
-  if (dropdown) {
-    dropdown.style.display = 'none';
-  }
-};
-
 // 添加登录状态响应式变量
 const isLoggedIn = ref(false);
 
@@ -141,32 +90,14 @@ const rememberMe = ref(false);
 const onSubmit = async () => {
   console.log('[Debug] 开始提交表单');//debug
   try {
-    // 调用你的登录接口
-    console.log('[Debug] 请求参数:', {
-  username: username.value,
-  password: password.value
-});
     const res = await POST('/user/login', {
-      username: username.value,  // 假设后端接收 username 字段
-      password: password.value
+      username: username.value,
+      password: password.value,
     });
 
-    // 登录成功处理
     if (res.code === 200) {
-      isLoggedIn.value = true;
-      // 1. 存储 token
-      localStorage.setItem(StorageEnum.GB_TOKEN_STORE, res.token);
-      
-      // 2. 跳转到首页
+      userStore.login(res.token); // 调用 Store 的 login 方法
       router.push('/home');
-      
-      // 3. 可选：记住我功能
-      if (rememberMe.value) {
-        localStorage.setItem('rememberedEmail', username.value);
-      }
-    } else {
-      // 显示后端返回的错误信息
-      ElMessage.error(res.message || '登录失败');
     }
   } catch (error: any) {
     // 错误处理
