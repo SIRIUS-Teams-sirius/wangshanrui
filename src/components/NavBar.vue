@@ -60,11 +60,11 @@ const handleLogout = async () => {
     // 1. 调用退出接口，发送当前用户名，并在请求头中携带 Token
     await POST('/user/logout', 
       { username: userStore.username }, 
-      // {
-      //   headers: {
-      //     Authorization: `Bearer ${userStore.token}` // 添加 Token
-      //   }
-      // }
+      {
+        headers: {
+          Authorization: `Bearer ${userStore.token}` // 添加 Token
+        }
+      }
     );
 
     // 2. 调用 Store 的 logout 方法，清除本地状态

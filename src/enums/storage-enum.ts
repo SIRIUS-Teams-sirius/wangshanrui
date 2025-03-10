@@ -1,7 +1,7 @@
 export enum StorageEnum {
   // token 
   GB_TOKEN_STORE = 'GB_TOKEN_STORE',
-  GB_USERNAME_STORE = 'GB_USERNAME', // 新增：存储用户名的键
+  GB_USERNAME_STORE = 'GB_USERNAME',
 
   // 语言
   YH_LANG_STORE = 'YH_LANG',

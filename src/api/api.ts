@@ -96,21 +96,26 @@ export const GET = async (url: string, params: Params): Promise<any> => {
  * @param {any} params
  * @return {any} 
  */
-export const POST = async (url: string, params: Params): Promise<any> => {
-    console.log('POST function called'); // 确认 POST 函数被调用
-    try {
-      const data = await axios.post(`${baseUrl}${url}`, params, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      console.log('Response Data:', data); // 打印响应数据
-      return data;
-    } catch (error) {
-      console.error('Request Error:', error); // 打印错误信息
-      return error;
-    }
-  };
+
+export const POST = async (
+  url: string,
+  params: any,
+  config?: AxiosRequestConfig // 新增第三个参数
+): Promise<any> => {
+  try {
+    const response = await axios.post(`${baseUrl}${url}`, params, {
+      ...config, // 合并配置
+      headers: {
+        'Content-Type': 'application/json',
+        ...config?.headers, // 合并自定义 headers
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Request Error:', error);
+    throw error; // 建议抛出错误以便调用方捕获
+  }
+};
 /**
  * @description: 没有基地址 访问根目录下文件
  * @param {string} url
