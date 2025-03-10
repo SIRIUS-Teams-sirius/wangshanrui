@@ -88,7 +88,7 @@ const rememberMe = ref(false);
 
 // 登录提交逻辑
 const onSubmit = async () => {
-  console.log('[Debug] 开始提交表单');//debug
+  console.log('[Debug] 开始提交表单'); // debug
   try {
     const res = await POST('/user/login', {
       username: username.value,
@@ -96,7 +96,8 @@ const onSubmit = async () => {
     });
 
     if (res.code === 200) {
-      userStore.login(res.token); // 调用 Store 的 login 方法
+      // 调用 Store 的 login 方法，传入 token 和 username
+      userStore.login(res.token, username.value);
       router.push('/home');
     }
   } catch (error: any) {

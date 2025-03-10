@@ -15,9 +15,9 @@
         <span class="nav-item" @click="goToDatascreenhome">检测模块</span>
       </div>
       <div class="nav-right">
-        <button v-if="!userStore.isLoggedIn" class="login-btn" @click="goToLogin">登录</button>
-        <button v-if="!userStore.isLoggedIn" class="register-btn" @click="goToRegister">注册</button>
-        <button v-else class="logout-btn" @click="handleLogout">退出</button>
+        <!-- <button v-if="!userStore.isLoggedIn" class="login-btn" @click="goToLogin">登录</button> -->
+        <!-- <button v-if="!userStore.isLoggedIn" class="register-btn" @click="goToRegister">注册</button> -->
+        <button class="logout-btn" @click="handleLogout">退出</button>
       </div>
     </nav>
   </template>
@@ -25,7 +25,7 @@
   <script setup lang="ts">
   import { useRouter } from 'vue-router';
   import { useUserStore } from '@/stores/user';
-  import { ElMessage } from 'element-plus';
+  import { ElMessage, useGetDerivedNamespace } from 'element-plus';
   import { POST } from '@/api/api';
   
   const router = useRouter();
@@ -54,19 +54,24 @@ const hideDropdown = (dropdownId: string) => {
   }
 };
   
+const name = useUserStore
 const handleLogout = async () => {
   try {
-    const response = await POST('/user/logout', {});
-    console.log('Logout Response:', response);
-    if (response.success) {
-      userStore.logout();
-      router.push('/login');
-      ElMessage.success('已安全退出');
-    } else {
-      ElMessage.error(response.msg || '退出失败，请重试');
-    }
+    // 1. 调用退出接口，发送当前用户名
+    await POST('/user/logout', {
+      username: userStore.username, // 从 userStore 中获取用户名
+    });
+
+    // 2. 调用 Store 的 logout 方法，清除本地状态
+    userStore.logout();
+
+    // 3. 跳转到登录页
+    router.push('/login');
+
+    // 4. 提示退出成功
+    ElMessage.success('已安全退出');
   } catch (error) {
-    console.error('Logout Error:', error);
+    console.error('退出失败:', error);
     ElMessage.error('退出失败，请重试');
   }
 };
