@@ -240,7 +240,7 @@ img {
   align-items: center;
 }
 .w3l-signinform::before {
-  background-color: rgb(76 2 27 / 65%);
+  background-color: rgb(116, 85, 228, 0.65);
   content: "";
   position: absolute;
   top: 0;

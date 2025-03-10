@@ -96,8 +96,8 @@ const onSubmit = async () => {
     });
 
     if (res.code === 200) {
-      // 调用 Store 的 login 方法，传入 token 和 username
-      userStore.login(res.token, username.value);
+      // 确保传递 username 和 token
+      userStore.login(res.token, username.value); 
       router.push('/home');
     }
   } catch (error: any) {
@@ -237,7 +237,7 @@ img {
 }
 
 .w3l-signinform::before {
-  background-color: rgb(76 2 27 / 65%);
+  background-color: rgba(116, 85, 228, 0.65);
   content: "";
   position: absolute;
   top: 0;

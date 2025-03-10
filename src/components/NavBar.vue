@@ -15,9 +15,9 @@
         <span class="nav-item" @click="goToDatascreenhome">检测模块</span>
       </div>
       <div class="nav-right">
-        <!-- <button v-if="!userStore.isLoggedIn" class="login-btn" @click="goToLogin">登录</button> -->
-        <!-- <button v-if="!userStore.isLoggedIn" class="register-btn" @click="goToRegister">注册</button> -->
-        <button class="logout-btn" @click="handleLogout">退出</button>
+        <button v-if="!userStore.isLoggedIn" class="login-btn" @click="goToLogin">登录</button>
+        <button v-if="!userStore.isLoggedIn" class="register-btn" @click="goToRegister">注册</button>
+        <button v-else class="logout-btn" @click="handleLogout">退出</button>
       </div>
     </nav>
   </template>
@@ -57,10 +57,15 @@ const hideDropdown = (dropdownId: string) => {
 const name = useUserStore
 const handleLogout = async () => {
   try {
-    // 1. 调用退出接口，发送当前用户名
-    await POST('/user/logout', {
-      username: userStore.username, // 从 userStore 中获取用户名
-    });
+    // 1. 调用退出接口，发送当前用户名，并在请求头中携带 Token
+    await POST('/user/logout', 
+      { username: userStore.username }, 
+      // {
+      //   headers: {
+      //     Authorization: `Bearer ${userStore.token}` // 添加 Token
+      //   }
+      // }
+    );
 
     // 2. 调用 Store 的 logout 方法，清除本地状态
     userStore.logout();
