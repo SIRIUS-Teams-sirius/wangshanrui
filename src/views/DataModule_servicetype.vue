@@ -1,5 +1,4 @@
 <template>
-  <!-- 给图表容器添加一个父容器，用于居中图表 -->
   <div class="chart-container">
     <div ref="chartRef" style="width: 100%; height: 400px;"></div>
   </div>
@@ -9,91 +8,27 @@
 import { onMounted, ref } from 'vue';
 import * as echarts from 'echarts';
 
-// 定义服务类型和数据量数组
 const dataAxis = [
-  "ecr_i",
-  "private",
-  "http",
-  "smtp",
-  "other",
-  "domain_u",
-  "ftp_data",
-  "eco_i",
-  "urp_i",
-  "telnet",
-  "ftp",
-  "ntp_u",
-  "auth",
-  "finger",
-  "csnet_ns",
-  "remote_job",
-  "rje",
-  "time",
-  "imap4",
-  "gopher",
-  "shell",
-  "echo",
-  "discard",
-  "domain",
-  "systat",
-  "iso_tsap",
-  "sql_net",
-  "whois",
-  "printer",
-  "nntp",
-  "courier",
-  "supdup",
-  "nnsp",
-  "ssh",
-  "klogin",
-  "uucp_path",
-  "vmnet",
-  "bgp",
-  "uucp",
-  "netbios_ssn",
-  "sunrpc",
-  "mtp",
-  "efs",
-  "daytime",
-  "hostnames",
-  "login",
-  "netbios_dgm",
-  "exec",
-  "http_443",
-  "Z39_50",
-  "netstat",
-  "ctf",
-  "kshell",
-  "name",
-  "ldap",
-  "pop_2",
-  "netbios_ns",
-  "link",
-  "IRC",
-  "pop_3",
-  "X11",
-  "urh_i",
-  "tim_i",
-  "red_i",
-  "tftp_u",
-  "pm_dump"
+  // ... 保持原有数据不变 ...
+  "ecr_i", "private", "http", "smtp", "other", "domain_u", "ftp_data", 
+  "eco_i", "urp_i", "telnet", "ftp", "ntp_u", "auth", "finger", "csnet_ns",
+  "remote_job", "rje", "time", "imap4", "gopher", "shell", "echo", "discard",
+  "domain", "systat", "iso_tsap", "sql_net", "whois", "printer", "nntp",
+  "courier", "supdup", "nnsp", "ssh", "klogin", "uucp_path", "vmnet", "bgp",
+  "uucp", "netbios_ssn", "sunrpc", "mtp", "efs", "daytime", "hostnames",
+  "login", "netbios_dgm", "exec", "http_443", "Z39_50", "netstat", "ctf",
+  "kshell", "name", "ldap", "pop_2", "netbios_ns", "link", "IRC", "pop_3",
+  "X11", "urh_i", "tim_i", "red_i", "tftp_u", "pm_dump"
 ];
 
 const data = [
-  281400, 110893, 64293, 9723, 7237, 5863, 4721, 1642, 538, 513, 798, 380, 328, 670,
-  126, 120, 111, 157, 117, 117, 112, 112, 116, 116, 115, 115, 110, 110, 109, 108,
-  108, 105, 105, 105, 106, 106, 106, 106, 106, 107, 107, 107, 103, 103, 104, 104,
-  99, 99, 99, 92, 95, 97, 98, 98, 101, 101, 102, 102, 43, 202, 11, 14, 7, 1, 1, 1
+  // ... 保持原有数据不变 ...
+  281400, 110893, 64293, 9723, 7237, 5863, 4721, 1642, 538, 513, 798, 380, 328,
+  670, 126, 120, 111, 157, 117, 117, 112, 112, 116, 116, 115, 115, 110, 110, 109,
+  108, 108, 105, 105, 105, 106, 106, 106, 106, 106, 107, 107, 107, 103, 103, 104,
+  104, 99, 99, 99, 92, 95, 97, 98, 98, 101, 101, 102, 102, 43, 202, 11, 14, 7, 1, 1, 1
 ];
 
-const yMax = 500;
-const dataShadow = [];
-
-for (let i = 0; i < data.length; i++) {
-  dataShadow.push(yMax);
-}
-
-// 定义 ECharts 配置项
 const option = {
   title: {
     text: '',
@@ -101,9 +36,18 @@ const option = {
   },
   xAxis: {
     data: dataAxis,
+    name: '类',  // 新增横坐标单位
+    nameLocation: 'end',
+    nameTextStyle: {
+      fontSize: 14,
+      color: '#666',
+      padding: [20, 0, 0, 0]  // 向下调整位置
+    },
     axisLabel: {
       inside: true,
-      color: '#fff'
+      color: '#000',
+      rotate: 45,  // 新增标签旋转
+      margin: 8    // 增加标签间距
     },
     axisTick: {
       show: false
@@ -114,6 +58,13 @@ const option = {
     z: 10
   },
   yAxis: {
+    name: '条',  // 新增纵坐标单位
+    nameLocation: 'end',
+    nameTextStyle: {
+      fontSize: 14,
+      color: '#666',
+      padding: [0, 0, 20, 0]  // 向左调整位置
+    },
     axisLine: {
       show: false
     },
@@ -121,12 +72,22 @@ const option = {
       show: false
     },
     axisLabel: {
-      color: '#999'
+      color: '#999',
+      margin: 8  // 统一标签间距
     }
+  },
+  grid: {  // 新增网格布局配置
+    top: 60,
+    bottom: 100,
+    left: 80,
+    right: 40,
+    containLabel: true
   },
   dataZoom: [
     {
-      type: 'inside'
+      type: 'inside',
+      start: 0,
+      end: 20  // 调整默认显示比例
     }
   ],
   series: [
@@ -149,26 +110,20 @@ const option = {
           ])
         }
       },
-      data: data
+      data: data,
+      barWidth: '60%'  // 调整柱条宽度
     }
   ]
 };
 
-// 定义图表容器的引用
 const chartRef = ref<HTMLElement | null>(null);
-
-// 定义数据缩放大小
 const zoomSize = 6;
 
 onMounted(() => {
   if (chartRef.value) {
-    // 初始化 ECharts 实例
     const myChart = echarts.init(chartRef.value);
-
-    // 设置 ECharts 配置项
     myChart.setOption(option);
 
-    // 监听点击事件
     myChart.on('click', function (params) {
       console.log(dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)]);
       myChart.dispatchAction({
@@ -177,6 +132,9 @@ onMounted(() => {
         endValue: dataAxis[Math.min(params.dataIndex + zoomSize / 2, data.length - 1)]
       });
     });
+
+    // 窗口大小自适应
+    window.addEventListener('resize', () => myChart.resize());
   }
 });
 </script>
@@ -187,5 +145,7 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 50px);
+  background: #fff;  /* 新增背景色 */
+  padding: 20px;     /* 增加内边距 */
 }
 </style>

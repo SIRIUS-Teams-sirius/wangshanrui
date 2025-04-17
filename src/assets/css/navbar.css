@@ -1,91 +1,105 @@
+/* 导航栏基础样式 - 修改添加了动画属性 */
 .navbar {
-    width: 100vw;
-    position: fixed;
-    top: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5vh 1vw;
-    background: rgb(0, 0, 0);
-    z-index: 10;
-    box-sizing: border-box;
-    flex-wrap: wrap;
-  }
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5vh 1vw;
+  background: rgb(0, 0, 0);
+  z-index: 10;
+  box-sizing: border-box;
+  flex-wrap: wrap;
   
-  /* 左侧导航 */
-  .nav-left {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    flex: 1;
-  }
-  
-  .nav-item {
-    color: white;
-    cursor: pointer;
-    padding: 0.5vh 0.7vw;
-    border-radius: 0.15vh;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-    margin-right: 1vw;
-    font-size: 2.5vh;
-    flex: 0 0 auto;
-  }
-  
-  .nav-item:hover,
-  .active {
-    background-color: #007bff;
-  }
-  
-  /* 右侧按钮 */
-  .nav-right {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  
-  .login-btn,
-  .register-btn,
-  .logout-btn
- {
-    padding: 0.5vh 0.7vw;
-    border: none;
-    border-radius: 0.3vh;
-    cursor: pointer;
-    transition: 0.3s;
-    margin-left: 1vw;
-    font-size: 2.5vh;
-    flex: 0 0 auto;
-  }
-  
-  .login-btn {
-    background: black;
-    color: white;
-  }
-  
-  .register-btn,
-  .logout-btn {
-    background: #007bff;
-    color: white;
-  }
-  
-  .login-btn:hover {
-    background: white;
-    color: black;
-  }
-  
-  .register-btn:hover
-  .logout-btn {
-    background: #0056b3;
-  }
-
-  @media (min-width: 75em) {
-    .navbar {
-       padding: 1vh 6vw;
-     }
+  /* 新增动画属性 */
+  transition: all 0.3s ease;
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
 }
 
-/* 下拉菜单样式 */
+/* 新增可见状态类 */
+.navbar.navbar-visible {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 左侧导航 - 保持原有样式 */
+.nav-left {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  flex: 1;
+}
+
+.nav-item {
+  color: white;
+  cursor: pointer;
+  padding: 0.5vh 0.7vw;
+  border-radius: 0.15vh;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  margin-right: 1vw;
+  font-size: 2.5vh;
+  flex: 0 0 auto;
+}
+
+.nav-item:hover,
+.active {
+  background-color: #007bff;
+}
+
+/* 右侧按钮 - 保持原有样式 */
+.nav-right {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.login-btn,
+.register-btn,
+.logout-btn {
+  padding: 0.5vh 0.7vw;
+  border: none;
+  border-radius: 0.3vh;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-left: 1vw;
+  font-size: 2.5vh;
+  flex: 0 0 auto;
+}
+
+.login-btn {
+  background: black;
+  color: white;
+}
+
+.register-btn,
+.logout-btn {
+  background: #007bff;
+  color: white;
+}
+
+.login-btn:hover {
+  background: white;
+  color: black;
+}
+
+/* 修复选择器错误 */
+.register-btn:hover,
+.logout-btn:hover {  /* 添加:hover状态 */
+  background: #0056b3;
+}
+
+@media (min-width: 75em) {
+  .navbar {
+    padding: 1vh 6vw;
+  }
+}
+
+/* 下拉菜单样式 - 调整定位方式 */
 .dropdown {
   position: relative;
   display: inline-block;
@@ -105,6 +119,9 @@
   padding: 0.5vh 0;
   margin: 0;
   box-sizing: border-box;
+  
+  /* 新增过渡效果 */
+  transition: opacity 0.3s ease;
 }
 
 .dropdown-item {
@@ -126,6 +143,26 @@
   background-color: #007bff;
 }
 
-.dropdown:hover .dropdown-content {
+/* 修改下拉菜单触发方式 */
+.dropdown:hover .dropdown-content,
+.dropdown:focus-within .dropdown-content { /* 添加键盘导航支持 */
   display: block;
+}
+
+/* 移除原有过渡动画（由新逻辑替代） */
+/* 新增移动端优化 */
+@media (hover: none) and (pointer: coarse) {
+  .dropdown-content {
+    position: static;
+    display: none;
+    width: auto;
+  }
+  
+  .dropdown:hover .dropdown-content {
+    display: none;
+  }
+  
+  .dropdown.active .dropdown-content {
+    display: block;
+  }
 }

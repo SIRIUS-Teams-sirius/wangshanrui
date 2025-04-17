@@ -7,7 +7,7 @@
       <div class="w3_info">
         <div class="left-info">
           <h1>Welcome Back</h1>
-          <p class="sub-para">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+          <p class="sub-para">Please fill in your user information to log in.</p>
         </div>
         <div class="right-form">
           <h2>Log In</h2>
@@ -99,6 +99,7 @@ const onSubmit = async () => {
       // 确保传递 username 和 token
       userStore.login(res.token, username.value); 
       router.push('/home');
+      console.log("response_data:",res.code);
     }
   } catch (error: any) {
     // 错误处理

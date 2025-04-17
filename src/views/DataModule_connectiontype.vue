@@ -1,7 +1,7 @@
 <template>
-<div class="chart-container">
-    <div ref="chartRef" style="width: 100%; height: 400px;"></div>
-  </div>
+  <div class="chart-container">
+      <div ref="chartRef" style="width: 100%; height: 400px;"></div>
+    </div>
   </template>
   
   <script setup lang="ts">
@@ -14,10 +14,22 @@
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: ['SF', 'S1', 'REJ', 'S2', 'S0', 'S3', 'RSTO', 'RSTR', 'RSTOS0', 'OTH', 'SH']
+      data: ['SF', 'S1', 'REJ', 'S2', 'S0', 'S3', 'RSTO', 'RSTR', 'RSTOS0', 'OTH', 'SH'],
+      name: '类',  // 添加横坐标单位
+      nameLocation: 'end',  // 名称显示在轴末端
+      nameTextStyle: {
+        fontSize: 14,
+        padding: [10, 0, 0, 0]  // 调整位置
+      }
     },
     yAxis: {
-      type: 'value'
+      type: 'value',
+      name: '条',  // 添加纵坐标单位
+      nameLocation: 'end',  // 名称显示在轴末端
+      nameTextStyle: {
+        fontSize: 14,
+        padding: [0, 0, 10, 0]  // 调整位置
+      }
     },
     series: [
       {
@@ -33,13 +45,12 @@
     myChart.setOption(option);
   });
   </script>
-
+  
   <style>
   .chart-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: calc(100vh - 50px);
-}
-</style>
-  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 50px);
+  }
+  </style>
