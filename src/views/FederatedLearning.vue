@@ -79,6 +79,7 @@
               <div class="client-progress">
                 <p>聚合进度: <progress :value="aggregateProgress" max="100"></progress> {{ aggregateProgress }}%</p>
                 <p>平均训练进度: <progress :value="averageProgress" max="100"></progress> {{ averageProgress }}%</p>
+                <button>查看联邦</button>
               </div>
             </div>
           </div>
@@ -187,7 +188,7 @@ export default {
 .container {
   height: 100vh;
   padding: 20px;
-  background: #f5f7fa;
+  background: linear-gradient(135deg, #e3f0ff 0%, #f5f7fa 100%);
   font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
@@ -203,10 +204,10 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  background: linear-gradient(120deg, #f8fbff 60%, #e3f0fe 100%);
+  border-radius: 18px;
+  padding: 24px 20px;
+  box-shadow: 0 4px 24px rgba(77,139,239,0.10);
 }
 
 .data-selection ul {
@@ -216,15 +217,18 @@ export default {
 }
 
 .data-selection li {
-  padding: 12px;
+  padding: 12px 18px;
   margin: 8px 0;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, box-shadow 0.2s;
+  font-weight: 500;
+  color: #1967d2;
 }
 
 .data-selection li:hover {
-  background: #f8f9fa;
+  background: #e3f2fd;
+  box-shadow: 0 2px 8px rgba(77,139,239,0.08);
 }
 
 /* 模型选择样式 */
@@ -235,30 +239,34 @@ export default {
 
 .model-option button {
   width: 100%;
-  padding: 12px;
-  background: #e8f0fe;
+  padding: 14px 16px;
+  background: linear-gradient(90deg, #e8f0fe 60%, #d2e3fc 100%);
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
   color: #1967d2;
+  font-weight: 600;
+  font-size: 16px;
+  box-shadow: 0 2px 8px rgba(77,139,239,0.06);
   transition: all 0.2s;
 }
 
 .model-option button:hover {
-  background: #d2e3fc;
+  background: linear-gradient(90deg, #d2e3fc 60%, #e8f0fe 100%);
+  filter: brightness(1.05);
 }
 
 .param-menu {
   position: absolute;
   width: 100%;
-  background: white;
-  border-radius: 8px;
-  padding: 15px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 18px 15px 12px 15px;
   margin-top: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 24px rgba(77,139,239,0.12);
   z-index: 10;
 }
 
@@ -267,74 +275,184 @@ export default {
   grid-template-columns: 1fr 80px;
   gap: 10px;
   align-items: center;
-  margin: 10px 0;
+  margin: 12px 0;
 }
 
 .param-item label {
-  font-size: 14px;
-  color: #666;
+  font-size: 15px;
+  color: #1967d2;
+  font-weight: 500;
 }
 
 .param-item input {
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 8px 0;
+  border: 1px solid #d2e3fc;
+  border-radius: 6px;
   text-align: center;
+  background: #f8fbff;
+  font-size: 15px;
+  color: #1967d2;
+  transition: border 0.2s;
+}
+.param-item input:focus {
+  border: 1.5px solid #4d8bef;
+  outline: none;
+  background: #e3f2fd;
 }
 
 .start-btn {
   width: 100%;
-  padding: 10px;
-  background: #4CAF50;
+  padding: 12px 0;
+  background: linear-gradient(90deg, #4d8bef 0%, #4CAF50 100%);
   color: white;
   border: none;
-  border-radius: 6px;
-  margin-top: 15px;
+  border-radius: 8px;
+  margin-top: 18px;
   cursor: pointer;
-  transition: background 0.3s;
+  font-size: 16px;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(77,139,239,0.10);
+  transition: background 0.3s, filter 0.2s;
 }
 
 .start-btn:hover {
-  background: #45a049;
+  filter: brightness(1.08);
 }
 
 /* 主面板样式 */
 .main-panel {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
 }
 
 .status-group {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 24px;
   height: 240px;
 }
 
 .training-status, .history-record {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  background: linear-gradient(120deg, #f8fbff 60%, #e3f0fe 100%);
+  border-radius: 16px;
+  padding: 24px 20px;
+  box-shadow: 0 4px 24px rgba(77,139,239,0.10);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.training-status:hover, .history-record:hover {
+  box-shadow: 0 8px 32px rgba(77,139,239,0.16);
+  transform: translateY(-2px) scale(1.01);
+}
+
+.status-items p {
+  margin-bottom: 12px;
 }
 
 .status {
-  padding: 4px 12px;
+  padding: 4px 16px;
   border-radius: 20px;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 1px;
 }
 
 .status.running { background: #4d8bef; color: white; }
 .status.completed { background: #4CAF50; color: white; }
 .status.active { background: #e3f2fd; color: #1976d2; }
 
+.client-progress progress {
+  width: 70%;
+  height: 12px;
+  border-radius: 6px;
+  background: #e3eafc;
+  accent-color: #4d8bef;
+  box-shadow: 0 1px 4px rgba(77,139,239,0.08);
+  margin-right: 8px;
+}
+
+.client-progress p {
+  margin: 8px 0;
+  font-size: 15px;
+}
+
+.client-progress button {
+  margin-top: 8px;
+  background: #fffbe6;
+  color: #faad14;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.client-progress button:hover {
+  background: #fff1b8;
+}
+
+.history-record {
+  position: relative;
+}
+
+.badge {
+  background: #4d8bef;
+  color: #fff;
+  border-radius: 10px;
+  padding: 2px 10px;
+  font-size: 13px;
+  margin-left: 8px;
+}
+
+.record-list {
+  margin-top: 16px;
+  max-height: 140px;
+  overflow-y: auto;
+}
+
+.record-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px dashed #e3eafc;
+  font-size: 15px;
+  color: #1967d2;
+  transition: background 0.2s;
+}
+.record-item:last-child {
+  border-bottom: none;
+}
+.record-item:hover {
+  background: #f0f7ff;
+}
+
+.record-item time {
+  font-size: 13px;
+  color: #999;
+  min-width: 120px;
+}
+
+.model-summary {
+  background: linear-gradient(120deg, #f8fbff 60%, #e3f0fe 100%);
+  border-radius: 16px;
+  padding: 24px 20px;
+  box-shadow: 0 4px 24px rgba(77,139,239,0.10);
+}
+
+.model-summary h3 {
+  margin-bottom: 18px;
+  color: #1967d2;
+  font-weight: 600;
+}
+
 .chart-container {
   height: calc(100vh - 420px);
   position: relative;
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 18px 10px 10px 10px;
 }
 
 /* 动画效果 */
@@ -344,5 +462,18 @@ export default {
 .slide-enter-from, .slide-leave-to {
   opacity: 0;
   transform: translateY(-10px);
+}
+
+@media (max-width: 900px) {
+  .main-content {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    margin-bottom: 18px;
+  }
+  .status-group {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
 }
 </style>

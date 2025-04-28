@@ -26,7 +26,7 @@
      <div class="nav-right">
        <button v-if="!userStore.isLoggedIn" class="login-btn" @click="goToLogin">登录</button>
        <button v-if="!userStore.isLoggedIn" class="register-btn" @click="goToRegister">注册</button>
-       <button v-else class="logout-btn" @click="handleLogout">退出</button>
+       <button v-if="userStore.isLoggedIn" class="logout-btn" @click="handleLogout">退出</button>
      </div>
    </nav>
  </template>

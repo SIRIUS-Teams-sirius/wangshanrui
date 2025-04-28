@@ -1,4 +1,3 @@
-
 /*
  * @LastEditors: Please set LastEditors
  * @LastEditTime: 2023-05-08 17:44:36
@@ -43,20 +42,12 @@ export type FileConfig = {
  * @响应拦截
  */
 axios.interceptors.response.use((response: AxiosResponse) => {
-    /**
-     * @code 登录过期 token验证失败 根据后端调 
-     */
-    // console.log(response)
+    // 只返回后端的完整结构 {code, message, data}
     if (response.status !== 200) {
         return Promise.reject(response)
     }
-    if (response.data.code == UtilVar.code) {
-        // router.push("/login")
-        return response.data
-    }
-    return response.data
+    return response.data;
 }, (error: any) => {
-    // console.log(error);
     let err = {
         success: false,
         msg: "未知异常，请联系管理员！"
@@ -64,7 +55,6 @@ axios.interceptors.response.use((response: AxiosResponse) => {
     if (JSON.stringify(error).indexOf('Network Error') != -1) {
         err.msg = "网络错误或服务错误！"
     }
-    // console.log(err);
     return Promise.reject(err)
 })
 
