@@ -6,9 +6,7 @@
         <div class="data-selection">
           <h3>选择数据集</h3>
           <ul>
-            <li>KDD 数据集</li>
-            <li>CICIDS2017 数据集</li>
-            <li>CICIDS2018 数据集</li>
+            <li v-for="item in datasets" :key="item.value" :class="{selected: selectedDataset === item.value}" @click="selectDataset(item)">{{ item.label }}</li>
           </ul>
         </div>
 
@@ -22,6 +20,10 @@
             <transition name="slide">
               <div v-show="activeMenu === 'flct'" class="param-menu">
                 <div class="param-item">
+                  <label>任务ID:</label>
+                  <input v-model="flctParams.task_id" placeholder="task_id">
+                </div>
+                <div class="param-item">
                   <label>客户端数量:</label>
                   <input type="number" v-model.number="flctParams.clients" min="1">
                 </div>
@@ -32,6 +34,14 @@
                 <div class="param-item">
                   <label>全局训练轮数:</label>
                   <input type="number" v-model.number="flctParams.globalEpochs" min="1">
+                </div>
+                <div class="param-item">
+                  <label>Batch Size:</label>
+                  <input type="number" v-model.number="flctParams.batch_size" min="1">
+                </div>
+                <div class="param-item">
+                  <label>Learning Rate:</label>
+                  <input type="number" step="0.0001" v-model.number="flctParams.learning_rate" min="0">
                 </div>
                 <button class="start-btn" @click="startTraining('FL-CT')">
                   开始训练
@@ -48,6 +58,10 @@
             <transition name="slide">
               <div v-show="activeMenu === 'dt'" class="param-menu">
                 <div class="param-item">
+                  <label>任务ID:</label>
+                  <input v-model="dtParams.task_id" placeholder="task_id">
+                </div>
+                <div class="param-item">
                   <label>客户端数量:</label>
                   <input type="number" v-model.number="dtParams.clients" min="1">
                 </div>
@@ -58,6 +72,14 @@
                 <div class="param-item">
                   <label>全局训练轮数:</label>
                   <input type="number" v-model.number="dtParams.globalEpochs" min="1">
+                </div>
+                <div class="param-item">
+                  <label>Batch Size:</label>
+                  <input type="number" v-model.number="dtParams.batch_size" min="1">
+                </div>
+                <div class="param-item">
+                  <label>Learning Rate:</label>
+                  <input type="number" step="0.0001" v-model.number="dtParams.learning_rate" min="0">
                 </div>
                 <button class="start-btn" @click="startTraining('DecisionTree')">
                   开始训练
@@ -74,7 +96,14 @@
           <div class="training-status">
             <h3>训练过程监控</h3>
             <div class="status-items">
-              <p>工作状态: <span :class="['status', trainingStatus]">{{ statusText }}</span></p>
+              <p>工作状态: <span :class="['status', trainingStatus]">
+                <template v-if="trainingStatus === 'started'">训练已开始</template>
+                <template v-else-if="trainingStatus === 'running'">训练中</template>
+                <template v-else-if="trainingStatus === 'completed'">已完成</template>
+                <template v-else>空闲</template>
+              </span>
+              <span v-if="taskIdDisplay" class="task-id">任务ID: {{ taskIdDisplay }}</span>
+              </p>
               <p>中心服务器状态: <span class="status active">正常</span></p>
               <div class="client-progress">
                 <p>聚合进度: <progress :value="aggregateProgress" max="100"></progress> {{ aggregateProgress }}%</p>
@@ -109,14 +138,37 @@
 <script>
 import { ref, onMounted } from "vue";
 import Chart from "chart.js/auto";
+import { POST } from '@/api/api';
 
 export default {
   name: "App",
   setup() {
+    // 数据集相关
+    const datasets = [
+      { label: 'KDD 数据集', value: 'KDD99' },
+      { label: 'CICIDS2017 数据集', value: 'CICIDS2017' },
+      { label: 'CICIDS2018 数据集', value: 'CICIDS2018' }
+    ];
+    const selectedDataset = ref('KDD');
+
     // 模型参数
     const activeMenu = ref(null);
-    const flctParams = ref({ clients: 3, localEpochs: 5, globalEpochs: 10 });
-    const dtParams = ref({ clients: 2, localEpochs: 3, globalEpochs: 5 });
+    const flctParams = ref({
+      task_id: '',
+      clients: 3,
+      localEpochs: 5,
+      globalEpochs: 10,
+      batch_size: 32,
+      learning_rate: 0.01
+    });
+    const dtParams = ref({
+      task_id: '',
+      clients: 2,
+      localEpochs: 3,
+      globalEpochs: 5,
+      batch_size: 32,
+      learning_rate: 0.01
+    });
 
     // 训练状态
     const trainingStatus = ref('idle');
@@ -126,6 +178,7 @@ export default {
       { time: "2025-04-17 14:30", status: "FL-CT模型训练完成" },
       { time: "2025-04-17 16:45", status: "决策树模型训练完成" }
     ]);
+    const taskIdDisplay = ref('');
 
     // 图表初始化
     onMounted(() => {
@@ -150,24 +203,70 @@ export default {
       });
     });
 
+    // 数据集选择
+    const selectDataset = async (item) => {
+      selectedDataset.value = item.value;
+      try {
+        await POST('/api/set_dataset', { data_file: item.value });
+      } catch (e) {
+        alert('数据集选择失败');
+      }
+    };
+
     // 方法
     const toggleMenu = (menu) => {
       activeMenu.value = activeMenu.value === menu ? null : menu;
     };
 
-    const startTraining = (modelType) => {
+    // 训练
+    const startTraining = async (modelType) => {
       trainingStatus.value = 'running';
+      let params = modelType === 'FL-CT' ? flctParams.value : dtParams.value;
+      const trueModelType = modelType === 'FL-CT' ? 'multiclass' : 'decisiontree';
+      const payload = {
+        task_id: params.task_id,
+        num_clients: params.clients,
+        model_type: trueModelType,
+        client_epochs: params.localEpochs,
+        global_epochs: params.globalEpochs,
+        batch_size: params.batch_size,
+        learning_rate: params.learning_rate,
+        data_file: selectedDataset.value
+      };
       trainingRecords.value.unshift({
         time: new Date().toLocaleString(),
-        status: `${modelType}训练启动 (客户端: ${modelType === 'FL-CT' ? flctParams.value.clients : dtParams.value.clients})`
+        status: `${modelType}训练启动 (客户端: ${params.clients})`
       });
-      console.log(`${modelType}训练参数:`, modelType === 'FL-CT' ? flctParams.value : dtParams.value);
-      setTimeout(() => {
-        trainingStatus.value = 'completed';
-      }, 3000);
+      try {
+        const res = await POST('/api/start_training', payload);
+        // 处理后端回显
+        if (res && res.message === '训练任务己启动') {
+          trainingStatus.value = 'started';
+          taskIdDisplay.value = res.task_id || '';
+          trainingRecords.value.unshift({
+            time: new Date().toLocaleString(),
+            status: res.message + (res.task_id ? ` (task_id: ${res.task_id})` : '')
+          });
+        } else {
+          trainingStatus.value = 'completed';
+          trainingRecords.value.unshift({
+            time: new Date().toLocaleString(),
+            status: res.msg || `${modelType}训练已提交`
+          });
+        }
+      } catch (e) {
+        trainingRecords.value.unshift({
+          time: new Date().toLocaleString(),
+          status: '训练请求失败'
+        });
+        trainingStatus.value = 'idle';
+      }
     };
 
     return {
+      datasets,
+      selectedDataset,
+      selectDataset,
       activeMenu,
       flctParams,
       dtParams,
@@ -178,6 +277,7 @@ export default {
       toggleMenu,
       startTraining,
       statusText: ref('已完成'),
+      taskIdDisplay,
     };
   }
 };
@@ -227,6 +327,11 @@ export default {
 }
 
 .data-selection li:hover {
+  background: #e3f2fd;
+  box-shadow: 0 2px 8px rgba(77,139,239,0.08);
+}
+
+.data-selection li.selected {
   background: #e3f2fd;
   box-shadow: 0 2px 8px rgba(77,139,239,0.08);
 }
