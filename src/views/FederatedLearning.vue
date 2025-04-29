@@ -138,7 +138,7 @@
 <script>
 import { ref, onMounted } from "vue";
 import Chart from "chart.js/auto";
-import { POST } from '@/api/api';
+import { federatedPOST } from '@/api/federatedApi';
 
 export default {
   name: "App",
@@ -207,7 +207,7 @@ export default {
     const selectDataset = async (item) => {
       selectedDataset.value = item.value;
       try {
-        await POST('/api/set_dataset', { data_file: item.value });
+        await federatedPOST('/set_dataset', { data_file: item.value });
       } catch (e) {
         alert('数据集选择失败');
       }
@@ -238,7 +238,7 @@ export default {
         status: `${modelType}训练启动 (客户端: ${params.clients})`
       });
       try {
-        const res = await POST('/api/start_training', payload);
+        const res = await federatedPOST('/start_training', payload);
         // 处理后端回显
         if (res && res.message === '训练任务己启动') {
           trainingStatus.value = 'started';
