@@ -4,6 +4,37 @@ import MockIndex from "./mock-index"
 Mock.setup({
     timeout: "300",
 });
+
+// ===== Mock.js 全局拦截白名单，登录/注册/退出/联邦接口不拦截 =====
+const XHR = window.XMLHttpRequest;
+const open = XHR.prototype.open;
+XHR.prototype.open = function (
+  method: string,
+  url: string | URL,
+  async: boolean = true,
+  username?: string | null,
+  password?: string | null
+) {
+  if (
+    typeof url === 'string' &&
+    (
+      url.includes('/api/user/login') ||
+      url.includes('/api/user/register') ||
+      url.includes('/api/user/logout') ||
+      url.includes('/api/start_training') ||
+      url.includes('/api/set_dataset')
+    )
+  ) {
+    // @ts-ignore
+    this.isMock = false;
+  } else {
+    // @ts-ignore
+    this.isMock = true;
+  }
+  // 明确 async 参数为 boolean 类型
+  return open.call(this, method, url, async === undefined ? true : async, username, password);
+};
+
 const mocks = [...MockIndex];
 export function mockXHR() {
     let i: MockParams;
