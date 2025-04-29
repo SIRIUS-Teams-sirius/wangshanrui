@@ -11,9 +11,12 @@ import '@/assets/css/navbar.css'
 import 'element-plus/dist/index.css';
 
 import {registerEcharts} from "@/plugins/echarts"
-//不使用mock 请注释掉
-import { mockXHR } from "@/mock/index";
-mockXHR()
+// ===== 关闭 mock 拦截，注释掉 mock 相关代码 =====
+// import '@/mock/index';
+// import { mockXHR } from '@/mock/mock-index';
+// if (process.env.NODE_ENV === 'development') {
+//   mockXHR();
+// }
 
 const app = createApp(App)
 app.component('v-chart', VChart)

@@ -93,6 +93,8 @@ export const POST = async (
   config?: AxiosRequestConfig // 新增第三个参数
 ): Promise<any> => {
   try {
+    // ===== 日志：打印POST请求的url和参数 =====
+    console.log('[POST请求]', url, params);
     const response = await axios.post(`${baseUrl}${url}`, params, {
       ...config, // 合并配置
       headers: {
