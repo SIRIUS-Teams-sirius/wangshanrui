@@ -26,7 +26,11 @@ XHR.prototype.open = function (
     )
   ) {
     // @ts-ignore
-    this.isMock = false;
+    this.__isMock = false;
+    // 关键：解绑 mockjs 的 xhr 代理，强制用原生 XHR
+    if (this.custom) {
+      this.custom.xhr = null;
+    }
   } else {
     // @ts-ignore
     this.isMock = true;
