@@ -100,10 +100,7 @@ export const POST = async (
         ...config?.headers, // 合并自定义 headers
       },
     });
-    // 兼容后端返回体为 {code, ...} 或 {data: {code, ...}}
-    if (response && response.data !== undefined) {
-      return response.data;
-    }
+    // 直接返回 response（已被拦截器处理为 response.data）
     return response;
   } catch (error) {
     console.error('Request Error:', error);
