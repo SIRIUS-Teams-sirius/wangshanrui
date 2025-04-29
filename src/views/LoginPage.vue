@@ -95,13 +95,13 @@ const onSubmit = async () => {
       password: password.value,
     });
     console.log("login response:", res);
-    // 兼容后端返回结构为 { code: 200, ... } 或 { data: { code: 200, ... } }
-    const code = res.code !== undefined ? res.code : res.data?.code;
-    console.log("response_code:", code);
-    if (code === 200) {
-      userStore.login(res.token, username.value); 
+    // 直接使用后端返回的JSON对象结构
+    if (res.code === 200) {
+      userStore.login(res.data, username.value); // res.data 是 token
       router.push('/home');
-      console.log("response_data:", code);
+      console.log("response_data:", res.code);
+    } else {
+      ElMessage.error(res.message || '登录失败');
     }
   } catch (error: any) {
     if (error.code === 401) {
