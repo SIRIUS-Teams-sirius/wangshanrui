@@ -63,7 +63,7 @@ onMounted(() => {
 const handleLogout = async () => {
   try {
     // 1. 调用退出接口
-    await POST('/user/logout', {});
+    await POST('/api/user/logout', {});
     
     // 2. 清除本地token
     localStorage.removeItem(StorageEnum.GB_TOKEN_STORE);
@@ -90,7 +90,7 @@ const rememberMe = ref(false);
 const onSubmit = async () => {
   console.log('[Debug] 开始提交表单'); // debug
   try {
-    const res = await POST('/user/login', {
+    const res = await POST('/api/user/login', {
       username: username.value,
       password: password.value,
     });

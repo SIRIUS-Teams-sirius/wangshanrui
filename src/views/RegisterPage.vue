@@ -86,7 +86,7 @@ const onSubmit = async () => {
     }
 
     // 调用注册接口
-    const res = await POST('/user/register', {
+    const res = await POST('/api/user/register', {
       username: username.value,
       password: password.value,
       location: location.value,

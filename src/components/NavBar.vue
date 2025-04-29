@@ -133,7 +133,7 @@
  
  const handleLogout = async () => {
    try {
-     await POST('/user/logout', { username: userStore.username }, {
+     await POST('/api/user/logout', { username: userStore.username }, {
        headers: { Authorization: `Bearer ${userStore.token}` }
      });
      userStore.logout();
