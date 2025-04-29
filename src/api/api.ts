@@ -93,8 +93,6 @@ export const POST = async (
   config?: AxiosRequestConfig // 新增第三个参数
 ): Promise<any> => {
   try {
-    // ===== 日志：打印POST请求的url和参数 =====
-    console.log('[POST请求]', url, params);
     const response = await axios.post(`${baseUrl}${url}`, params, {
       ...config, // 合并配置
       headers: {
@@ -102,10 +100,14 @@ export const POST = async (
         ...config?.headers, // 合并自定义 headers
       },
     });
-    return response.data;
+    // 兼容后端返回体为 {code, ...} 或 {data: {code, ...}}
+    if (response && response.data !== undefined) {
+      return response.data;
+    }
+    return response;
   } catch (error) {
     console.error('Request Error:', error);
-    throw error; // 建议抛出错误以便调用方捕获
+    throw error;
   }
 };
 /**
