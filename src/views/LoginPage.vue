@@ -94,15 +94,16 @@ const onSubmit = async () => {
       username: username.value,
       password: password.value,
     });
-
-    if (res.code === 200) {
-      // 确保传递 username 和 token
+    console.log("login response:", res);
+    // 兼容后端返回结构为 { code: 200, ... } 或 { data: { code: 200, ... } }
+    const code = res.code !== undefined ? res.code : res.data?.code;
+    console.log("response_code:", code);
+    if (code === 200) {
       userStore.login(res.token, username.value); 
       router.push('/home');
-      console.log("response_data:",res.code);
+      console.log("response_data:", code);
     }
   } catch (error: any) {
-    // 错误处理
     if (error.code === 401) {
       ElMessage.error(error.message || '用户名或密码错误');
     } else {
