@@ -135,7 +135,7 @@
    try {
      console.log('logout params:', userStore.username, userStore.token);
      await POST('/api/user/logout', { username: userStore.username }, {
-       headers: { Authorization: `Bearer ${userStore.token}` }
+       headers: { 'auth-token': userStore.token }
      });
      userStore.logout();
      router.push('/login');
