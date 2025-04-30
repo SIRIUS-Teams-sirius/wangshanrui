@@ -94,7 +94,7 @@ const onSubmit = async () => {
       username: username.value,
       password: password.value,
     });
-    console.log("login response:", res);
+    console.log("login response:", res.code);
     // 直接使用后端返回的JSON对象结构
     if (res.code === 200) {
       userStore.login(res.data, username.value); // res.data 是 token

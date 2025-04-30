@@ -65,7 +65,7 @@ function handleDetectFinished(results: Array<{label: string; location: string;}>
     </div>
     <div class="contetn_center">
       <CenterMap ref="centerMapRef" class="contetn_center_top" title="设备分布图" />
-      <ItemWrap class="contetn_center-bottom" title="检测详情">
+      <ItemWrap class="contetn_center-bottom" title="检测记录">
         <CenterBottom />
       </ItemWrap>
     </div>

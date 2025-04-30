@@ -21,7 +21,7 @@ let updateInterval: number | undefined
 const chartOption = reactive({
   xAxis: {
     type: 'category',
-    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], // 初始演示数据 
+    data: ['4.21', '4.22', '4.23', '4.24', '4.25', '4.26', '4.27'], // 初始演示数据 
     axisLine: { lineStyle: { color: '#4A90E2' } }
   },
   yAxis: {
@@ -45,7 +45,7 @@ const chartOption = reactive({
         { offset: 1, color: 'rgba(0,253,250,0.01)' }
       ])
     },
-    data: [820, 932, 901, 934, 1290, 1330, 1320] // 初始演示数据 
+    data: [82, 93, 91, 94, 120, 140, 133] // 初始演示数据 
   }],
   tooltip: {
     trigger: 'axis',
@@ -79,7 +79,8 @@ const updateChartData = (timeData: string[], valueData: number[]) => {
 // 数据获取与处理 
 const fetchData = async () => {
   try {
-    const res = await currentGET("leftTop")
+    // 修改为标准API路径，确保走Vite代理
+    const res = await currentGET('/api/leftTop')
     if (res.success) {
       // 假设接口返回数据结构（按需调整）
       const mockData = {

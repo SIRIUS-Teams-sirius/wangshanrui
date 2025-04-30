@@ -1,4 +1,3 @@
-
 import type { UserConfig, ConfigEnv } from 'vite';
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
@@ -36,6 +35,16 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
           target: 'http://localhost:8081',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, '')
+        },
+        '/federated': {
+          target: 'http://127.0.0.1:5000',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/federated/, '')
+        },
+        '/detect': {
+          target: 'http://127.0.0.1:5000',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/detect/, '')
         }
       }
     },
