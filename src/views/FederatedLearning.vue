@@ -249,7 +249,7 @@ export default {
         status: `${modelType}训练启动 (客户端: ${params.clients})`
       });
       try {
-        const res = await federatedPOST('/start_training', payload);
+        const res = await federatedPOST('/cilent/train', payload);
         if (res && res.message === '训练任务己启动') {
           trainingStatus.value = 'started';
           taskIdDisplay.value = res.task_id || '';
@@ -294,6 +294,12 @@ export default {
               const current = parseInt(match[1]);
               const total = parseInt(match[2]);
               trainingProgress.value = Math.round((current / total) * 100);
+              // 修改：根据分数判断工作状态
+              if (current === total && total > 0) {
+                trainingStatus.value = 'completed';
+              } else if (current > 0 && current < total) {
+                trainingStatus.value = 'running';
+              }
             }
             // 解析折线图数据
             const epochs = [], acc = [], time = [];
@@ -312,7 +318,6 @@ export default {
           if (res && res.finished) {
             clearInterval(logInterval);
             logInterval = null;
-            trainingStatus.value = 'completed';
           }
         } catch (e) {
           // 失败时不清除定时器
