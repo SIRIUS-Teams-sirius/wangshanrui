@@ -19,12 +19,12 @@ axios.interceptors.request.use(function (config: AxiosRequestConfig):any {
     // 在发送请求之前做些什么 传token
     let token: any = getLocalStorage(StorageEnum.GB_TOKEN_STORE);
     if (token) {
-        // @ts-ignore
-        config.headers.common[RequestEnum.GB_TOKEN_KEY] = token;
+        // 修正：确保 headers 一定有值
+        config.headers = config.headers || {};
+        config.headers[RequestEnum.GB_TOKEN_KEY] = token;
     }
-    // @ts-ignore
+    config.headers = config.headers || {};
     config.headers['Content-Type'] = "application/json;charset=utf-8";
-
     return config;
 }, function (error: any) {
     // 对请求错误做些什么
@@ -93,6 +93,7 @@ export const POST = async (
   config?: AxiosRequestConfig // 新增第三个参数
 ): Promise<any> => {
   try {
+    console.log('[POST] will send:', `${baseUrl}${url}`, params, config);
     const response = await axios.post(`${baseUrl}${url}`, params, {
       ...config, // 合并配置
       headers: {
@@ -100,7 +101,7 @@ export const POST = async (
         ...config?.headers, // 合并自定义 headers
       },
     });
-    // 直接返回 response（已被拦截器处理为 response.data）
+    console.log('[POST] response:', response);
     return response;
   } catch (error) {
     console.error('Request Error:', error);
