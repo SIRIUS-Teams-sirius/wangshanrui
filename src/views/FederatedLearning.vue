@@ -249,8 +249,8 @@ export default {
         status: `${modelType}训练启动 (客户端: ${params.clients})`
       });
       try {
-        const res = await federatedPOST('/cilent/train', payload);
-        if (res && res.message === '训练任务己启动') {
+        const res = await federatedPOST('/client/train', payload);
+        if (res && res.message != '') {
           trainingStatus.value = 'started';
           taskIdDisplay.value = res.task_id || '';
           trainingRecords.value.unshift({
@@ -288,18 +288,28 @@ export default {
           if (res && res.all_logs) {
             trainingLogs.value = res.all_logs;
             latestLog.value = res.latest_log || '';
-            // 解析训练进度
+            // 统一：所有状态判断和轮询停止都根据 latest_log 的 epoch 分数
+            let current = 0, total = 0;
             const match = latestLog.value.match(/Global Epoch (\d+)[^\d]+(\d+)/);
             if (match) {
-              const current = parseInt(match[1]);
-              const total = parseInt(match[2]);
-              trainingProgress.value = Math.round((current / total) * 100);
-              // 修改：根据分数判断工作状态
-              if (current === total && total > 0) {
-                trainingStatus.value = 'completed';
-              } else if (current > 0 && current < total) {
-                trainingStatus.value = 'running';
-              }
+              current = parseInt(match[1]);
+              total = parseInt(match[2]);
+              trainingProgress.value = total > 0 ? Math.round((current / total) * 100) : 0;
+            } else {
+              trainingProgress.value = 0;
+            }
+            // 状态判断优化
+            if (total > 0 && current === total) {
+              trainingStatus.value = 'completed';
+              // 训练完成后停止轮询
+              clearInterval(logInterval);
+              logInterval = null;
+            } else if (current > 0 && current < total) {
+              trainingStatus.value = 'running';
+            } else if (current === 0) {
+              trainingStatus.value = 'started';
+            } else {
+              trainingStatus.value = 'idle';
             }
             // 解析折线图数据
             const epochs = [], acc = [], time = [];
@@ -313,11 +323,6 @@ export default {
             }
             chartData.value = { epochs, acc, time };
             updateChart();
-          }
-          // 训练完成后停止轮询
-          if (res && res.finished) {
-            clearInterval(logInterval);
-            logInterval = null;
           }
         } catch (e) {
           // 失败时不清除定时器
