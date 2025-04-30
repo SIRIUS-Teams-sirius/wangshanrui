@@ -134,9 +134,7 @@
  const handleLogout = async () => {
    try {
      console.log('logout params:', userStore.username, userStore.token);
-     await POST('/api/user/logout', { username: userStore.username }, {
-       headers: { 'auth-token': userStore.token }
-     });
+     await POST('/api/user/logout', { username: userStore.username }); // 移除headers参数
      userStore.logout();
      router.push('/login');
      ElMessage.success('已安全退出');
