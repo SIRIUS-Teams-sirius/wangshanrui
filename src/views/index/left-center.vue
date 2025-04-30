@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { graphic } from "echarts/core";
 import { currentGET } from "@/api";
 
@@ -22,7 +22,7 @@ const state = reactive({
   totalNum: 0,
 });
 
-// 只保留 value 和 name
+// 默认占位数据
 const attackPieData = ref([
   { value: 0, name: 'dos' },
   { value: 0, name: 'probe' },
@@ -61,7 +61,10 @@ const getData = () => {
     }
   });
 };
-getData();
+
+onMounted(() => {
+  setOption();
+});
 
 const setOption = () => {
   option.value = {
