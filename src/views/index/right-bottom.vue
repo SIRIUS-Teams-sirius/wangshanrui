@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, defineEmits } from "vue";
 import { detectTraffic } from '@/api/detectApi';
 
 const detecting = ref(false);
 const detectResultMsg = ref('');
+const emit = defineEmits(['detect-finished']);
 
 // 获取csv并上传检测
 const handleStartDetect = async () => {
@@ -18,6 +19,7 @@ const handleStartDetect = async () => {
     // 2. 上传到/server/detect
     const res = await detectTraffic(file, 'auto'); // location可根据实际需求填写
     detectResultMsg.value = '检测完成';
+    emit('detect-finished', res.results); // 新增：通知父组件
     // 可在此处触发全局事件或store更新，通知其它组件刷新数据
     // 如：emit('detect-finished', res)
   } catch (e) {

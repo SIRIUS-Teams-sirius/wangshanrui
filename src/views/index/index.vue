@@ -8,6 +8,16 @@ import CenterBottom from "./center-bottom.vue";
 import RightTop from "./right-top.vue";
 import RightCenter from "./right-center.vue";
 import RightBottom from "./right-bottom.vue";
+import { ref } from 'vue';
+
+const leftCenterRef = ref();
+function handleDetectFinished(results) {
+  const labelsCount = {};
+  results.forEach(item => {
+    labelsCount[item.label] = (labelsCount[item.label] || 0) + 1;
+  });
+  leftCenterRef.value?.updateAttackPie(labelsCount);
+}
 </script>
 
 <template>
@@ -18,7 +28,7 @@ import RightBottom from "./right-bottom.vue";
         <div class="item">统计分析</div>
       </div> -->
       <ItemWrap class="contetn_left-center left" title="攻击占比">
-        <LeftCenter />
+        <LeftCenter ref="leftCenterRef" />
       </ItemWrap>
       <ItemWrap class="contetn_left-top left" title="上一周的入侵流量统计">
         <LeftTop />
@@ -42,7 +52,7 @@ import RightBottom from "./right-bottom.vue";
         <RightCenter />
       </ItemWrap>
       <ItemWrap class="contetn_left-bottom right" title="威胁等级分布 ">
-        <RightBottom />
+        <RightBottom @detect-finished="handleDetectFinished" />
       </ItemWrap>
     </div>
   </div>
