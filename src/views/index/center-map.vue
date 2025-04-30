@@ -5,6 +5,8 @@ import { registerMap, getMap } from "echarts/core";
 import { optionHandle, regionCodes } from "./center.map";
 import BorderBox13 from "@/components/datav/border-box-13";
 import type { MapdataType } from "./center.map";
+import { defineExpose } from 'vue';
+
 const option = ref({});
 const code = ref("china"); //china 代表中国 其他地市是行政编码
 
@@ -49,6 +51,11 @@ const getData = async (regionCode: string) => {
     }
   });
 };
+
+function getDataWithCustomList(regionCode: string, list: object[]) {
+  dataSetHandle(regionCode, list);
+}
+
 const getGeojson = (regionCode: string) => {
   return new Promise<boolean>(async (resolve) => {
     let mapjson = getMap(regionCode);
@@ -79,6 +86,14 @@ const mapClick = (params: any) => {
     window["$message"].warning("暂无下级地市");
   }
 };
+
+function updateData(cityStatsArr: { name: string; value: number }[]) {
+  // cityStatsArr: [{ name: '城市名', value: 数量 }]
+  // 直接用城市名和数量作为地图数据
+  getDataWithCustomList('china', cityStatsArr);
+}
+
+defineExpose({ updateData });
 </script>
 
 <template>

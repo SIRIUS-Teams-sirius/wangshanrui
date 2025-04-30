@@ -11,12 +11,29 @@ import RightBottom from "./right-bottom.vue";
 import { ref } from 'vue';
 
 const leftCenterRef = ref();
-function handleDetectFinished(results) {
-  const labelsCount = {};
-  results.forEach(item => {
+const rightCenterRef = ref();
+const centerMapRef = ref();
+
+function handleDetectFinished(results: Array<{label: string; location: string;}>) {
+  // 统计 label 数量
+  const labelsCount: Record<string, number> = {};
+  results.forEach((item: {label: string}) => {
     labelsCount[item.label] = (labelsCount[item.label] || 0) + 1;
   });
   leftCenterRef.value?.updateAttackPie(labelsCount);
+
+  // 统计 location 数量
+  const cityStats: Record<string, number> = {};
+  results.forEach((item: {location: string}) => {
+    if (item.location) {
+      cityStats[item.location] = (cityStats[item.location] || 0) + 1;
+    }
+  });
+  // 传递给右上角城市排名
+  const cityStatsArr: Array<{name: string; value: number}> = Object.entries(cityStats).map(([name, value]) => ({ name, value }));
+  rightCenterRef.value?.updateData(cityStatsArr);
+  // 传递给地图
+  centerMapRef.value?.updateData(cityStatsArr);
 }
 </script>
 
@@ -35,7 +52,7 @@ function handleDetectFinished(results) {
       </ItemWrap>
     </div>
     <div class="contetn_center">
-      <CenterMap class="contetn_center_top" title="设备分布图" />
+      <CenterMap ref="centerMapRef" class="contetn_center_top" title="设备分布图" />
       <ItemWrap class="contetn_center-bottom" title="检测详情">
         <CenterBottom />
       </ItemWrap>
@@ -49,7 +66,7 @@ function handleDetectFinished(results) {
         title="城市排名(TOP8)"
         style="padding: 0 10px 16px 10px"
       >
-        <RightCenter />
+        <RightCenter ref="rightCenterRef" />
       </ItemWrap>
       <ItemWrap class="contetn_left-bottom right" title="威胁等级分布 ">
         <RightBottom @detect-finished="handleDetectFinished" />
