@@ -22,11 +22,23 @@ function handleDetectFinished(results: Array<{label: string; location: string;}>
   });
   leftCenterRef.value?.updateAttackPie(labelsCount);
 
-  // 统计 location 数量
+  // 城市名映射，保证与geojson一致
+  const cityNameMap: Record<string, string> = {
+    '北京': '北京市',
+    '上海': '上海市',
+    '广州': '广州市',
+    '深圳': '深圳市',
+    '杭州': '杭州市',
+    '成都': '成都市',
+    '重庆': '重庆市',
+    '西安': '西安市',
+    // 可补充其它常用城市
+  };
   const cityStats: Record<string, number> = {};
   results.forEach((item: {location: string}) => {
     if (item.location) {
-      cityStats[item.location] = (cityStats[item.location] || 0) + 1;
+      const stdName = cityNameMap[item.location] || item.location;
+      cityStats[stdName] = (cityStats[stdName] || 0) + 1;
     }
   });
   // 传递给右上角城市排名
