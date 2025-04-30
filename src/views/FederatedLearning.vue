@@ -106,9 +106,10 @@
               </p>
               <p>中心服务器状态: <span class="status active">正常</span></p>
               <div class="client-progress">
-                <p>聚合进度: <progress :value="aggregateProgress" max="100"></progress> {{ aggregateProgress }}%</p>
-                <p>平均训练进度: <progress :value="averageProgress" max="100"></progress> {{ averageProgress }}%</p>
-                <button>查看联邦</button>
+                <p>训练进度:
+                  <progress :value="trainingProgress" max="100"></progress>
+                  {{ trainingProgress }}%
+                </p>
               </div>
             </div>
           </div>
@@ -129,6 +130,11 @@
           <div class="chart-container">
             <canvas id="combined-chart"></canvas>
           </div>
+          <!-- 新增：训练日志展示 -->
+          <div v-if="trainingLogs.length" class="training-logs">
+            <h4>训练日志</h4>
+            <pre style="max-height:200px;overflow:auto;background:#222;color:#0f0;padding:10px;border-radius:8px;">{{ trainingLogs.join('\n') }}</pre>
+          </div>
         </div>
       </div>
     </div>
@@ -138,7 +144,7 @@
 <script>
 import { ref, onMounted } from "vue";
 import Chart from "chart.js/auto";
-import { federatedPOST } from '@/api/federatedApi';
+import { federatedPOST, federatedGET } from '@/api/federatedApi';
 
 export default {
   name: "App",
@@ -172,32 +178,37 @@ export default {
 
     // 训练状态
     const trainingStatus = ref('idle');
-    const aggregateProgress = ref(100);
-    const averageProgress = ref(100);
     const trainingRecords = ref([
       { time: "2025-04-17 14:30", status: "FL-CT模型训练完成" },
       { time: "2025-04-17 16:45", status: "决策树模型训练完成" }
     ]);
     const taskIdDisplay = ref('');
+    const trainingLogs = ref([]); // 训练日志
+    const latestLog = ref(''); // 最新日志
+    const trainingProgress = ref(0); // 训练进度百分比
+    let logInterval = null; // 轮询定时器
+    let chartInstance = null; // 折线图实例
+    const chartData = ref({ epochs: [], acc: [], time: [] });
 
     // 图表初始化
     onMounted(() => {
       const ctx = document.getElementById("combined-chart");
-      new Chart(ctx, {
+      chartInstance = new Chart(ctx, {
         type: "line",
         data: {
-          labels: ["1", "2", "3", "4", "5"],
+          labels: chartData.value.epochs,
           datasets: [
-            { label: "准确率", data: [80,85,87,90,92], borderColor: '#4CAF50' },
-            { label: "F1 分数", data: [75,78,80,85,88], borderColor: '#2196F3' },
-            { label: "召回率", data: [72,76,79,82,85], borderColor: '#FF9800' },
-            { label: "精确率", data: [78,81,84,87,89], borderColor: '#9C27B0' }
+            { label: "Val Acc", data: chartData.value.acc, borderColor: '#4CAF50', yAxisID: 'y1' },
+            { label: "Time (s)", data: chartData.value.time, borderColor: '#2196F3', yAxisID: 'y2' }
           ]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          scales: { y: { beginAtZero: false, max: 100, ticks: { callback: v => v + '%' } } },
+          scales: {
+            y1: { type: 'linear', position: 'left', beginAtZero: true, title: { display: true, text: 'Val Acc' } },
+            y2: { type: 'linear', position: 'right', beginAtZero: true, title: { display: true, text: 'Time (s)' }, grid: { drawOnChartArea: false } }
+          },
           plugins: { legend: { position: 'top' } }
         }
       });
@@ -239,7 +250,6 @@ export default {
       });
       try {
         const res = await federatedPOST('/start_training', payload);
-        // 处理后端回显
         if (res && res.message === '训练任务己启动') {
           trainingStatus.value = 'started';
           taskIdDisplay.value = res.task_id || '';
@@ -247,6 +257,8 @@ export default {
             time: new Date().toLocaleString(),
             status: res.message + (res.task_id ? ` (task_id: ${res.task_id})` : '')
           });
+          // 新增：开始轮询获取训练日志
+          startLogPolling(res.task_id);
         } else {
           trainingStatus.value = 'completed';
           trainingRecords.value.unshift({
@@ -263,6 +275,82 @@ export default {
       }
     };
 
+    // 轮询获取训练日志并更新进度和图表
+    const startLogPolling = (taskId) => {
+      if (logInterval) clearInterval(logInterval);
+      trainingLogs.value = [];
+      latestLog.value = '';
+      trainingProgress.value = 0;
+      chartData.value = { epochs: [], acc: [], time: [] };
+      logInterval = setInterval(async () => {
+        try {
+          const res = await federatedGET(`/client/progress/${taskId}`);
+          if (res && res.all_logs) {
+            trainingLogs.value = res.all_logs;
+            latestLog.value = res.latest_log || '';
+            // 解析训练进度
+            const match = latestLog.value.match(/Global Epoch (\d+)[^\d]+(\d+)/);
+            if (match) {
+              const current = parseInt(match[1]);
+              const total = parseInt(match[2]);
+              trainingProgress.value = Math.round((current / total) * 100);
+            }
+            // 解析折线图数据
+            const epochs = [], acc = [], time = [];
+            for (const log of res.all_logs) {
+              const m = log.match(/Global Epoch (\d+)[^\d]+(\d+).*Val Acc: ([\d.]+), Time: ([\d.]+)s/);
+              if (m) {
+                epochs.push(Number(m[1]));
+                acc.push(Number(m[3]));
+                time.push(Number(m[4]));
+              }
+            }
+            chartData.value = { epochs, acc, time };
+            updateChart();
+          }
+          // 训练完成后停止轮询
+          if (res && res.finished) {
+            clearInterval(logInterval);
+            logInterval = null;
+            trainingStatus.value = 'completed';
+          }
+        } catch (e) {
+          // 失败时不清除定时器
+        }
+      }, 3000);
+    };
+
+    // 折线图更新
+    const updateChart = () => {
+      if (!chartInstance) {
+        const ctx = document.getElementById("combined-chart");
+        chartInstance = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: chartData.value.epochs,
+            datasets: [
+              { label: "Val Acc", data: chartData.value.acc, borderColor: '#4CAF50', yAxisID: 'y1' },
+              { label: "Time (s)", data: chartData.value.time, borderColor: '#2196F3', yAxisID: 'y2' }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y1: { type: 'linear', position: 'left', beginAtZero: true, title: { display: true, text: 'Val Acc' } },
+              y2: { type: 'linear', position: 'right', beginAtZero: true, title: { display: true, text: 'Time (s)' }, grid: { drawOnChartArea: false } }
+            },
+            plugins: { legend: { position: 'top' } }
+          }
+        });
+      } else {
+        chartInstance.data.labels = chartData.value.epochs;
+        chartInstance.data.datasets[0].data = chartData.value.acc;
+        chartInstance.data.datasets[1].data = chartData.value.time;
+        chartInstance.update();
+      }
+    };
+
     return {
       datasets,
       selectedDataset,
@@ -271,13 +359,13 @@ export default {
       flctParams,
       dtParams,
       trainingStatus,
-      aggregateProgress,
-      averageProgress,
       trainingRecords,
       toggleMenu,
       startTraining,
-      statusText: ref('已完成'),
       taskIdDisplay,
+      trainingLogs,
+      latestLog,
+      trainingProgress,
     };
   }
 };
