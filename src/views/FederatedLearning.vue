@@ -218,7 +218,7 @@ export default {
     const selectDataset = async (item) => {
       selectedDataset.value = item.value;
       try {
-        await federatedPOST('/set_dataset', { data_file: item.value });
+        await federatedPOST('/client/set_dataset', { data_file: item.value });
       } catch (e) {
         alert('数据集选择失败');
       }
