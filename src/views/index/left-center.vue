@@ -38,7 +38,7 @@ const colorMap = [
 ];
 
 // 提供外部调用方法，更新饼图数据
-export function updateAttackPie(labelsCount: Record<string, number>) {
+function updateAttackPie(labelsCount: Record<string, number>) {
   const labelOrder = ['dos', 'probe', 'u2r', 'r2l'];
   attackPieData.value = labelOrder.map(label => ({
     value: labelsCount[label] || 0,
@@ -46,6 +46,7 @@ export function updateAttackPie(labelsCount: Record<string, number>) {
   }));
   setOption();
 }
+defineExpose({ updateAttackPie });
 
 const getData = () => {
   currentGET("leftCenter").then((res) => {
