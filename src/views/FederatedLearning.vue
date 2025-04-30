@@ -231,6 +231,17 @@ export default {
 
     // 训练
     const startTraining = async (modelType) => {
+      // 新增：每次开始训练时重置图表和训练日志
+      if (chartInstance) {
+        chartInstance.data.labels = [];
+        chartInstance.data.datasets[0].data = [];
+        chartInstance.data.datasets[1].data = [];
+        chartInstance.update();
+      }
+      trainingLogs.value = [];
+      latestLog.value = '';
+      trainingProgress.value = 0;
+      chartData.value = { epochs: [], acc: [], time: [] };
       trainingStatus.value = 'running';
       let params = modelType === 'FL-CT' ? flctParams.value : dtParams.value;
       const trueModelType = modelType === 'FL-CT' ? 'multiclass' : 'decisiontree';
