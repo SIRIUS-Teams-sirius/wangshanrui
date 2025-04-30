@@ -1,5 +1,3 @@
-
-
 //mapData数据结构
 export interface MapdataType {
     name: string;
@@ -13,7 +11,25 @@ export const optionHandle = (regionCode: string,
     return {
         backgroundColor: "rgba(0,0,0,0)",
         tooltip: {
-            show: false,
+            show: true,
+            formatter: function (params: any) {
+                // 修正：支持 effectScatter 和 map 两种类型
+                if (params.data) {
+                    // effectScatter: value为[x, y, value]
+                    if (Array.isArray(params.data.value)) {
+                        return params.name + '：' + (params.data.value[2] ?? params.data.value);
+                    }
+                    // map: value为number
+                    return params.name + '：' + params.data.value;
+                } else {
+                    return params.name;
+                }
+            },
+            backgroundColor: "rgba(0,0,0,.6)",
+            borderColor: "rgba(147, 235, 248, .8)",
+            textStyle: {
+                color: "#FFF",
+            },
         },
         legend: {
             show: false,
@@ -78,8 +94,14 @@ export const optionHandle = (regionCode: string,
                 tooltip: {
                     show: true,
                     formatter: function (params: any) {
+                        // 修正：支持 effectScatter 和 map 两种类型
                         if (params.data) {
-                            return params.name + "：" + params.data["value"];
+                            // effectScatter: value为[x, y, value]
+                            if (Array.isArray(params.data.value)) {
+                                return params.name + '：' + (params.data.value[2] ?? params.data.value);
+                            }
+                            // map: value为number
+                            return params.name + '：' + params.data.value;
                         } else {
                             return params.name;
                         }
@@ -175,8 +197,14 @@ export const optionHandle = (regionCode: string,
                 tooltip: {
                     show: true,
                     formatter: function (params: any) {
+                        // 修正：支持 effectScatter 和 map 两种类型
                         if (params.data) {
-                            return params.name + "：" + params.data["value"][2];
+                            // effectScatter: value为[x, y, value]
+                            if (Array.isArray(params.data.value)) {
+                                return params.name + '：' + (params.data.value[2] ?? params.data.value);
+                            }
+                            // map: value为number
+                            return params.name + '：' + params.data.value;
                         } else {
                             return params.name;
                         }
