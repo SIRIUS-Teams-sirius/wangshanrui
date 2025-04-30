@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, nextTick } from "vue";
+import { ref, reactive, nextTick, onMounted } from "vue";
 import { currentGET, GETNOBASE } from "@/api";
 import { registerMap, getMap } from "echarts/core";
 import { optionHandle, regionCodes } from "./center.map";
@@ -19,6 +19,18 @@ withDefaults(
     title: "地图",
   }
 );
+
+// 默认占位数据
+const defaultCityStatsArr = [
+  { name: '北京', value: 0 },
+  { name: '上海', value: 0 },
+  { name: '广州', value: 0 },
+  { name: '深圳', value: 0 },
+  { name: '杭州', value: 0 },
+  { name: '成都', value: 0 },
+  { name: '重庆', value: 0 },
+  { name: '西安', value: 0 }
+];
 
 const dataSetHandle = async (regionCode: string, list: object[]) => {
   const geojson: any = await getGeojson(regionCode);
@@ -92,6 +104,10 @@ function updateData(cityStatsArr: { name: string; value: number }[]) {
   // 直接用城市名和数量作为地图数据
   getDataWithCustomList('china', cityStatsArr);
 }
+
+onMounted(() => {
+  updateData(defaultCityStatsArr);
+});
 
 defineExpose({ updateData });
 </script>
