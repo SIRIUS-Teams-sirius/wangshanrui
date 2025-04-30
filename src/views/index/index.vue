@@ -80,7 +80,7 @@ function handleDetectFinished(results: Array<{label: string; location: string;}>
       >
         <RightCenter ref="rightCenterRef" />
       </ItemWrap>
-      <ItemWrap class="contetn_left-bottom right" title="威胁等级分布 ">
+      <ItemWrap class="contetn_left-bottom right" title="检测控制台">
         <RightBottom @detect-finished="handleDetectFinished" />
       </ItemWrap>
     </div>
