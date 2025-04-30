@@ -10,6 +10,13 @@ import '@/assets/css/tailwind.css'
 import '@/assets/css/navbar.css'
 import 'element-plus/dist/index.css';
 
+// mock相关代码彻底注释，确保所有请求真实发包
+// import '@/mock/index';
+// import { mockXHR } from '@/mock/mock-index';
+// if (process.env.NODE_ENV === 'development') {
+//   mockXHR();
+// }
+
 import {registerEcharts} from "@/plugins/echarts"
 
 const app = createApp(App)
