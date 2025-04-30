@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { ref, defineEmits } from "vue";
 import { detectTraffic } from '@/api/detectApi';
+import axios from 'axios';
 
 const detecting = ref(false);
+const modelPathInput = ref(''); // 新增：模型路径输入
+const setModelMsg = ref('');
 const emit = defineEmits(['detect-finished']);
 
 // 获取csv并上传检测
@@ -28,10 +31,27 @@ const handleStartDetect = async () => {
 const handleStopDetect = () => {
   detecting.value = false;
 };
+
+const handleSetModel = async () => {
+  if (!modelPathInput.value) return;
+  try {
+    setModelMsg.value = '正在切换模型...';
+    await axios.post('http://127.0.0.1:5000/server/set_model', { model_path: modelPathInput.value });
+    setModelMsg.value = '模型切换成功';
+  } catch (e) {
+    setModelMsg.value = '模型切换失败';
+  }
+};
 </script>
 
 <template>
   <div class="detect-btn-group">
+    <!-- 新增：模型选择输入框及按钮 -->
+    <div style="margin-bottom:12px;width:100%;display:flex;flex-direction:column;align-items:center;">
+      <input v-model="modelPathInput" placeholder="输入模型路径" style="width:80%;padding:6px 10px;border-radius:6px;border:1px solid #ccc;" />
+      <button style="margin-top:6px;padding:6px 18px;font-size:15px;" @click="handleSetModel">切换模型</button>
+      <div v-if="setModelMsg" style="color:#4d8bef;margin-top:4px;">{{ setModelMsg }}</div>
+    </div>
     <button :disabled="detecting" @click="handleStartDetect">开始检测</button>
     <button :disabled="!detecting" @click="handleStopDetect">终止检测</button>
   </div>

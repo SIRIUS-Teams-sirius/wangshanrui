@@ -127,6 +127,7 @@
 
         <div class="model-summary">
           <h3>模型性能指标</h3>
+          <div v-if="bestModelPath" style="font-size:16px;color:#4d8bef;margin-bottom:8px;word-break:break-all;">模型路径：{{ bestModelPath }}</div>
           <div class="chart-container">
             <canvas id="combined-chart"></canvas>
           </div>
@@ -186,6 +187,7 @@ export default {
     const trainingLogs = ref([]); // 训练日志
     const latestLog = ref(''); // 最新日志
     const trainingProgress = ref(0); // 训练进度百分比
+    const bestModelPath = ref(''); // 新增：全局最佳模型路径
     let logInterval = null; // 轮询定时器
     let chartInstance = null; // 折线图实例
     const chartData = ref({ epochs: [], acc: [], time: [] });
@@ -315,6 +317,8 @@ export default {
               // 训练完成后停止轮询
               clearInterval(logInterval);
               logInterval = null;
+              // 新增：训练完成后获取global_best_model_path
+              fetchBestModelPath(taskId);
             } else if (current > 0 && current < total) {
               trainingStatus.value = 'running';
             } else if (current === 0) {
@@ -339,6 +343,18 @@ export default {
           // 失败时不清除定时器
         }
       }, 3000);
+    };
+
+    // 新增：获取global_best_model_path
+    const fetchBestModelPath = async (taskId) => {
+      try {
+        const res = await federatedGET(`/client/result/${taskId}`);
+        if (res && res.global_best_model_path) {
+          bestModelPath.value = res.global_best_model_path;
+        }
+      } catch (e) {
+        bestModelPath.value = '';
+      }
     };
 
     // 折线图更新
@@ -387,6 +403,7 @@ export default {
       trainingLogs,
       latestLog,
       trainingProgress,
+      bestModelPath,
     };
   }
 };
