@@ -127,7 +127,9 @@
 
         <div class="model-summary">
           <h3>模型性能指标</h3>
-          <div v-if="bestModelPath" style="font-size:16px;color:#4d8bef;margin-bottom:8px;word-break:break-all;">模型路径：{{ bestModelPath }}</div>
+          <div style="font-size:16px;color:#4d8bef;margin-bottom:8px;word-break:break-all;">
+            模型ID：{{ bestModelPath ? bestModelPath.split('/')?.pop() : '无' }}
+          </div>
           <div class="chart-container">
             <canvas id="combined-chart"></canvas>
           </div>
@@ -180,8 +182,7 @@ export default {
     // 训练状态
     const trainingStatus = ref('idle');
     const trainingRecords = ref([
-      { time: "2025-04-17 14:30", status: "FL-CT模型训练完成" },
-      { time: "2025-04-17 16:45", status: "决策树模型训练完成" }
+      { time: "————now————", status: "训练记录面板已启动" }
     ]);
     const taskIdDisplay = ref('');
     const trainingLogs = ref([]); // 训练日志
